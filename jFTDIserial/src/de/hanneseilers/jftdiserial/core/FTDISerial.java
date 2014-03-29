@@ -140,10 +140,10 @@ public class FTDISerial implements jFTDIserialConnector {
 
 	@Override
 	public boolean disconnect() {
-		if( connector != null ){
-			connected = !connector.disconnect();
+		if( connector != null && connector.disconnect() ){
+			connected = false;
 		}
-		return !connected;
+		return false;
 	}
 
 	@Override
