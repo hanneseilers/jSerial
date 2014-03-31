@@ -7,6 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.hanneseilers.jftdiserial.core.connectors.JD2XXConnector;
+import de.hanneseilers.jftdiserial.core.connectors.RXTXConnector;
 import de.hanneseilers.jftdiserial.core.connectors.YAD2xxConnector;
 import de.hanneseilers.jftdiserial.core.interfaces.jFTDIserialConnector;
 
@@ -50,6 +51,7 @@ public class FTDISerial implements jFTDIserialConnector {
 	private List<jFTDIserialConnector> registerConnectors(){
 		connectors.add( new JD2XXConnector() );
 		connectors.add( new YAD2xxConnector() );
+		connectors.add( new RXTXConnector() );
 		
 		return connectors;
 	}
@@ -140,8 +142,11 @@ public class FTDISerial implements jFTDIserialConnector {
 
 	@Override
 	public boolean disconnect() {
-		if( connector != null && connector.disconnect() ){
-			connected = false;
+		if( connector != null ){
+			if( connector.disconnect() ){
+				connected = false;
+				return true;
+			};
 		}
 		return false;
 	}

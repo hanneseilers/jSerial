@@ -1,11 +1,13 @@
 package de.hanneseilers.jftdiserial.core;
 
+import gnu.io.CommPortIdentifier;
 import net.sf.yad2xx.Device;
 
 public class SerialDevice {
 
 	private String jd2xxDevice = null;
 	private Device yad2xxDevice = null;
+	private CommPortIdentifier rxtxDevice = null;
 	
 	/**
 	 * Constructor
@@ -21,6 +23,14 @@ public class SerialDevice {
 	 */
 	public SerialDevice(String device){
 		jd2xxDevice = device;
+	}
+	
+	/**
+	 * Constructor
+	 * @param device	{@link CommPortIdentifier}
+	 */
+	public SerialDevice(CommPortIdentifier device){
+		rxtxDevice = device;
 	}
 
 	/**
@@ -45,8 +55,18 @@ public class SerialDevice {
 		else if( jd2xxDevice != null ){
 			return jd2xxDevice;
 		}
+		else if( rxtxDevice != null ){
+			return rxtxDevice.getName();
+		}
 		
 		return "";
+	}
+
+	/**
+	 * @return the rxtxDevice
+	 */
+	public CommPortIdentifier getRxTxDevice() {
+		return rxtxDevice;
 	}
 
 }

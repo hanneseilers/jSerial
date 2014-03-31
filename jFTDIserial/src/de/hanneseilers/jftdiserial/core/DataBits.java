@@ -1,5 +1,7 @@
 package de.hanneseilers.jftdiserial.core;
 
+import gnu.io.SerialPort;
+
 /**
  * Serial connection data bits
  * @author Hannes Eilers
@@ -7,14 +9,16 @@ package de.hanneseilers.jftdiserial.core;
  */
 public enum DataBits {
 
-	DATABITS_5(5),
-	DATABITS_6(6),
-	DATABITS_7(7),
-	DATABITS_8(8);
+	DATABITS_5(5, SerialPort.DATABITS_5),
+	DATABITS_6(6, SerialPort.DATABITS_6),
+	DATABITS_7(7, SerialPort.DATABITS_7),
+	DATABITS_8(8, SerialPort.DATABITS_8);
 	
 	public int bits;
-	private DataBits(int databits){
+	public int bits_rxtx;
+	private DataBits(int databits, int databist_rxtx){
 		bits = databits;
+		bits_rxtx = databist_rxtx;
 	}
 	
 }
