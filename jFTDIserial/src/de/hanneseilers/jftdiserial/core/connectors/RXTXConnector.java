@@ -98,7 +98,10 @@ public class RXTXConnector implements jFTDIserialConnector {
 				device.close();
 				input.close();
 				output.close();
+				
 				device = null;
+				input = null;
+				output = null;
 				return true;
 			}catch (IOException e){
 				log.error("Exception while disconnecting serial port");
@@ -125,25 +128,42 @@ public class RXTXConnector implements jFTDIserialConnector {
 
 	@Override
 	public byte read() {
-		// TODO Auto-generated method stub
-		return 0;
+		return read(1)[0];
 	}
 
 	@Override
 	public byte[] read(int num) {
-		// TODO Auto-generated method stub
-		return null;
+		byte[] buffer = new byte[num];		
+		try {
+			
+			if( device != null && input != null ){
+				input.read(buffer);
+			}
+			
+		} catch (IOException e) {
+			log.error("Could not read data from serial port.");
+		}
+		
+		return buffer;
 	}
 
 	@Override
 	public boolean write(byte b) {
-		// TODO Auto-generated method stub
-		return false;
+		return write( new byte[]{b} );
 	}
 
 	@Override
 	public boolean write(byte[] buffer) {
-		// TODO Auto-generated method stub
+		try{
+			
+			if( device != null && output != null ){
+				output.write(buffer);
+			}
+			
+		}catch (IOException e){
+			log.error("Could not write data to serial port.");
+		}
+		
 		return false;
 	}
 
