@@ -40,12 +40,11 @@ public class YAD2xxConnector extends AbstractConnector {
 		connectorName = "yad2xx (64bit)";
 		connectorLibDir = "yad2xx";
 		
-		try{
-			
+		try{			
 			// load library
-			libLoaded = loadRequiredLibs("FTDIInterface", true);
-			ftdiInterface = new FTDIInterface();			
+			libLoaded = loadRequiredLibs("FTDIInterface", true);			
 			if( libLoaded ){
+				ftdiInterface = new FTDIInterface();
 				log.info("Loaded " + getConnectorName());
 			}
 		}catch (UnsatisfiedLinkError e){

@@ -57,7 +57,7 @@ public abstract class AbstractConnector implements jFTDIserialConnector {
 				
 			}	
 		} else{
-			log.warn("yad2xx library doesn't support your operating system!");
+			log.warn(libFileName + " library doesn't support your operating system!");
 		}
 		
 		return false;

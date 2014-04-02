@@ -5,14 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import de.hanneseilers.jftdiserial.core.Baudrates;
 import de.hanneseilers.jftdiserial.core.DataBits;
 import de.hanneseilers.jftdiserial.core.Parity;
 import de.hanneseilers.jftdiserial.core.SerialDevice;
 import de.hanneseilers.jftdiserial.core.StopBits;
-import de.hanneseilers.jftdiserial.core.interfaces.jFTDIserialConnector;
 import jd2xx.JD2XX;
 
 /**
@@ -20,9 +17,8 @@ import jd2xx.JD2XX;
  * @author Hannes Eilers
  *
  */
-public class JD2XXConnector implements jFTDIserialConnector {
+public class JD2XXConnector extends AbstractConnector {
 	
-	private static final Logger log = LogManager.getLogger();
 	private JD2XX device = null;
 	private boolean libLoaded = false;
 	
@@ -33,18 +29,19 @@ public class JD2XXConnector implements jFTDIserialConnector {
 	private int timeout = 500;
 
 	public JD2XXConnector() {
+		log = LogManager.getLogger();
+		connectorName = "jd2xx (32bit)";
+		connectorLibDir = "jd2xx";
+		
 		try{
-			device = new JD2XX();
-			libLoaded = true;
-			log.info("Loaded " + getConnectorName());
+			libLoaded = loadRequiredLibs("JD2XX", true);
+			if( libLoaded ){
+				device = new JD2XX();
+				log.info("Loaded " + getConnectorName());
+			}
 		}catch (UnsatisfiedLinkError e){
 			libLoaded = false;
 		}
-	}
-	
-	@Override
-	public String getConnectorName() {
-		return "jd2xx (32bit)";
 	}
 
 	@Override
