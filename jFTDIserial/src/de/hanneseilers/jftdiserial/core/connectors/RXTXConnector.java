@@ -42,6 +42,14 @@ public class RXTXConnector implements jFTDIserialConnector {
 	private int timeout = 500;
 	
 	public RXTXConnector() {
+		libLoaded = loadRequiredLibs();
+	}
+	
+	/**
+	 * Copies required library files to a valid destination directory and loads library.
+	 * @return {@code true\ if successfull, {@code false} otherwise.
+	 */
+	private boolean loadRequiredLibs(){
 		String libPath = "./"+System.getProperty("java.library.path");
 		StringTokenizer libPathParser = new StringTokenizer(libPath, ";");
 		File libSource = getRxTxLibSource();
@@ -62,9 +70,8 @@ public class RXTXConnector implements jFTDIserialConnector {
 					
 						// try to load library					
 						System.loadLibrary("rxtxSerial");
-						libLoaded = true;
 						log.info("Copied rxtx lib to " + libDestination.getPath());
-						break;
+						return true;
 					}catch (IOException e){
 						log.debug("Can not copy rxtx library to " + libDestination.getPath());
 					}catch (UnsatisfiedLinkError e){
@@ -77,6 +84,8 @@ public class RXTXConnector implements jFTDIserialConnector {
 		} else{
 			log.warn("rxtx library doesn't support your operating system!");
 		}
+		
+		return false;
 	}
 	
 	/**

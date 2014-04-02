@@ -1,8 +1,12 @@
 package de.hanneseilers.jftdiserial.core.connectors;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import net.sf.yad2xx.Device;
 import net.sf.yad2xx.FTDIException;
@@ -51,6 +55,46 @@ public class YAD2xxConnector implements jFTDIserialConnector {
 		}catch (UnsatisfiedLinkError e){
 			libLoaded = false;
 		}
+	}
+	
+	/**
+	 * Copies required library files to a valid destination directory and loads library.
+	 * @return {@code true\ if successfull, {@code false} otherwise.
+	 */
+	private boolean loadRequiredLibs(){
+		String libPath = "./"+System.getProperty("java.library.path");
+		StringTokenizer libPathParser = new StringTokenizer(libPath, ";");
+		File libSource = getRxTxLibSource();
+		
+		if( libSource != null ){
+			while( libPathParser.hasMoreElements() ){
+				
+				// get path for library
+				libPath = libPathParser.nextToken();
+				File libDestination = new File(libPath + "/" + libSource.getName());
+				
+				// check if can write in path
+				if( libSource.canRead() ){
+					
+					try{
+						// copy lib
+						Files.copy( Paths.get(libSource.getPath()), Paths.get(libDestination.getPath()) );
+						log.info("Copied yad2xx lib to " + libDestination.getPath());
+						return true;
+					}catch (IOException e){
+						log.debug("Can not copy yad2xx library to " + libDestination.getPath());
+					}catch (UnsatisfiedLinkError e){
+						log.warn("Could not load yad2xx library!");
+					}
+					
+				}
+				
+			}	
+		} else{
+			log.warn("yad2xx library doesn't support your operating system!");
+		}
+		
+		return false;
 	}
 	
 	/**
@@ -103,7 +147,7 @@ public class YAD2xxConnector implements jFTDIserialConnector {
 		if( os != null && bit != null ){
 		
 			// get file
-			File libFile = new File("lib/rxtx/" + os + "/" + bit + "/" + prefix + "rxtxSerial" + ending);
+			File libFile = new File("lib/yad2xx/" + os + "/" + bit + "/" + prefix + "rxtxSerial" + ending);
 			log.debug("OS: " + os);
 			log.debug("BIT: " + bit);
 			log.debug("RXTX-LIB: " + libFile.getPath());
