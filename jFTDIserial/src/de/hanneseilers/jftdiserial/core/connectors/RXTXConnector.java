@@ -5,12 +5,16 @@ import gnu.io.CommPortIdentifier;
 import gnu.io.PortInUseException;
 import gnu.io.SerialPort;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -38,7 +42,102 @@ public class RXTXConnector implements jFTDIserialConnector {
 	private int timeout = 500;
 	
 	public RXTXConnector() {
-		libLoaded = true;
+		String libPath = System.getProperty("java.library.path");
+		StringTokenizer libPathParser = new StringTokenizer(libPath, ";");
+		File libSource = getRxTxLibSource();
+		
+		if( libSource != null ){
+			while( libPathParser.hasMoreElements() ){
+				
+				// get path for library
+				libPath = libPathParser.nextToken();
+				File libDestination = new File(libPath + "/" + libSource.getName());
+				
+				// check if can write in path
+				if( libSource.canRead() ){
+					
+					try{
+						// copy lib
+						Files.copy( Paths.get(libSource.getPath()), Paths.get(libDestination.getPath()) );
+					
+						// try to load library					
+						System.loadLibrary("rxtxSerial");
+						libLoaded = true;
+						log.info("Copied rxtx lib to " + libDestination.getPath());
+						break;
+					}catch (IOException e){
+						log.debug("Can not copy rxtx library to " + libDestination.getPath());
+					}catch (UnsatisfiedLinkError e){
+						log.warn("Could not load rxtx library!");
+					}
+					
+				}
+				
+			}	
+		} else{
+			log.warn("rxtx library doesn't support your operating system!");
+		}
+	}
+	
+	private File getRxTxLibSource(){
+		String os = System.getProperty("os.name").toLowerCase();
+		String bit = System.getProperty("sun.arch.data.model");
+		String ending = null;
+		String prefix = "";
+		
+		// Get os type
+		// WINDOWS
+		if( os.indexOf("win") >= 0 ){
+			os = "windows";
+			ending = ".dll";
+		}
+		// LINUX
+		else if( os.indexOf("nix") >= 0 || os.indexOf("nux") >= 0 || os.indexOf("aix") > 0 ){
+			os = "linux";
+			ending = ".so";
+		}
+		// MAC
+		else if( os.indexOf("mac") >= 0 ){
+			os = "mac";
+			prefix = "lib";
+			ending = ".jnilib";
+		}
+		// SOLARIS (not supported)
+		else if( os.indexOf("sunos") >= 0 ){
+			os = "solaris";
+			prefix = "lib";
+		}
+		// OS NOT SUPPORTED
+		else{
+			os = null;
+		}
+		
+		// get os 32 or 64 bit
+		if( bit.contains("64") ){
+			bit = "64bit";
+		}
+		else if( bit.contains("32") ){
+			bit = "32bit";
+		}
+		else{
+			bit = null;
+		}
+		
+		if( os != null && bit != null ){
+		
+			// get file
+			File libFile = new File("lib/" + os + "/" + bit + "/" + prefix + "rxtxSerial" + ending);
+			log.debug("OS: " + os);
+			log.debug("BIT: " + bit);
+			log.debug("RXTX-LIB: " + libFile.getPath());
+			
+			if( libFile.isFile() ){
+				return libFile;
+			}
+			
+		}
+		
+		return null;
 	}
 	
 	@Override
