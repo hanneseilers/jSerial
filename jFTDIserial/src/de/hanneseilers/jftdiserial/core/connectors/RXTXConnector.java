@@ -42,7 +42,7 @@ public class RXTXConnector implements jFTDIserialConnector {
 	private int timeout = 500;
 	
 	public RXTXConnector() {
-		String libPath = System.getProperty("java.library.path");
+		String libPath = "./"+System.getProperty("java.library.path");
 		StringTokenizer libPathParser = new StringTokenizer(libPath, ";");
 		File libSource = getRxTxLibSource();
 		
@@ -79,6 +79,9 @@ public class RXTXConnector implements jFTDIserialConnector {
 		}
 	}
 	
+	/**
+	 * @return OS depended library {@link File}, or {@code null} if no library for this os could be found.
+	 */
 	private File getRxTxLibSource(){
 		String os = System.getProperty("os.name").toLowerCase();
 		String bit = System.getProperty("sun.arch.data.model");
@@ -126,7 +129,7 @@ public class RXTXConnector implements jFTDIserialConnector {
 		if( os != null && bit != null ){
 		
 			// get file
-			File libFile = new File("lib/" + os + "/" + bit + "/" + prefix + "rxtxSerial" + ending);
+			File libFile = new File("lib/rxtx/" + os + "/" + bit + "/" + prefix + "rxtxSerial" + ending);
 			log.debug("OS: " + os);
 			log.debug("BIT: " + bit);
 			log.debug("RXTX-LIB: " + libFile.getPath());

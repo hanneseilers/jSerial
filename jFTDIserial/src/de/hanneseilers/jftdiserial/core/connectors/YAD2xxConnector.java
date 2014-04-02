@@ -1,5 +1,6 @@
 package de.hanneseilers.jftdiserial.core.connectors;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,12 +42,79 @@ public class YAD2xxConnector implements jFTDIserialConnector {
 	 */
 	public YAD2xxConnector() {
 		try{
+			
+			// load library
+			
 			ftdiInterface = new FTDIInterface();
 			libLoaded = true;
 			log.info("Loaded " + getConnectorName());
 		}catch (UnsatisfiedLinkError e){
 			libLoaded = false;
 		}
+	}
+	
+	/**
+	 * @return OS depended library {@link File}, or {@code null} if no library for this os could be found.
+	 */
+	private File getRxTxLibSource(){
+		String os = System.getProperty("os.name").toLowerCase();
+		String bit = System.getProperty("sun.arch.data.model");
+		String ending = null;
+		String prefix = "";
+		
+		// Get os type
+		// WINDOWS
+		if( os.indexOf("win") >= 0 ){
+			os = "windows";
+			ending = ".dll";
+		}
+		// LINUX
+		else if( os.indexOf("nix") >= 0 || os.indexOf("nux") >= 0 || os.indexOf("aix") > 0 ){
+			os = "linux";
+			ending = ".so";
+		}
+		// MAC
+		else if( os.indexOf("mac") >= 0 ){
+			os = "mac";
+			prefix = "lib";
+			ending = ".jnilib";
+		}
+		// SOLARIS (not supported)
+		else if( os.indexOf("sunos") >= 0 ){
+			os = "solaris";
+			prefix = "lib";
+		}
+		// OS NOT SUPPORTED
+		else{
+			os = null;
+		}
+		
+		// get os 32 or 64 bit
+		if( bit.contains("64") ){
+			bit = "64bit";
+		}
+		else if( bit.contains("32") ){
+			bit = "32bit";
+		}
+		else{
+			bit = null;
+		}
+		
+		if( os != null && bit != null ){
+		
+			// get file
+			File libFile = new File("lib/rxtx/" + os + "/" + bit + "/" + prefix + "rxtxSerial" + ending);
+			log.debug("OS: " + os);
+			log.debug("BIT: " + bit);
+			log.debug("RXTX-LIB: " + libFile.getPath());
+			
+			if( libFile.isFile() ){
+				return libFile;
+			}
+			
+		}
+		
+		return null;
 	}
 	
 	@Override
