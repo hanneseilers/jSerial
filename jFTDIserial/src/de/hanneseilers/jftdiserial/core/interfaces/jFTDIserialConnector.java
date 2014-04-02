@@ -11,7 +11,7 @@ import de.hanneseilers.jftdiserial.core.StopBits;
 public interface jFTDIserialConnector {
 
 	/**
-	 * @return {@link String} of name of connector
+	 * @return {@link String} of connectorName of connector
 	 */
 	public String getConnectorName();
 	

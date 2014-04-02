@@ -83,8 +83,8 @@ public class FTDISerial implements jFTDIserialConnector {
 	}
 	
 	/**
-	 * Selects an available library by using it's {@link String} name.
-	 * @param name	{@link String} name.
+	 * Selects an available library by using it's {@link String} connectorName.
+	 * @param connectorName	{@link String} connectorName.
 	 */
 	public void selectLibByName(String name){
 		for( jFTDIserialConnector con : connectors ){
@@ -98,7 +98,7 @@ public class FTDISerial implements jFTDIserialConnector {
 	}
 	
 	/**
-	 * @return {@link String} name of the selected library or {@code null} if no library selected.
+	 * @return {@link String} connectorName of the selected library or {@code null} if no library selected.
 	 */
 	public String getSelectedLibName(){
 		if( connector != null ){
