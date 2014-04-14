@@ -71,9 +71,9 @@ public class RXTXConnector extends AbstractConnector {
 			return true;
 			
 		}catch (PortInUseException e){
-			log.error("Serial port " + sDevice.getRxTxDevice().getName() + " is in use.");
+			log.error("Serial port {} is in use.", sDevice.getRxTxDevice().getName());
 		}catch (Exception e){
-			log.error("Can not open port " + sDevice.getRxTxDevice().getName());
+			log.error("Can not open port {}", sDevice.getRxTxDevice().getName());
 		}
 		return false;
 	}

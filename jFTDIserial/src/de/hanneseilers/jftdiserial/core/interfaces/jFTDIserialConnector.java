@@ -64,7 +64,6 @@ public interface jFTDIserialConnector {
 	/**
 	 * Reads bytes from serial device and writes them into buffer.
 	 * @param num 	{@link Integer} number of bytes to read
-	 * 				the number of {@link Byte} to read.
 	 * @return 		{@link Byte} array with {@code num} bytes.
 	 */
 	public byte[] read(int num);

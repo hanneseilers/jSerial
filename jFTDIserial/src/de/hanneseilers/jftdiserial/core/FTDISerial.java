@@ -1,6 +1,7 @@
 package de.hanneseilers.jftdiserial.core;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -113,6 +114,30 @@ public class FTDISerial implements jFTDIserialConnector {
 	 */
 	public boolean isConnected() {
 		return connected;
+	}
+	
+	/**
+	 * Reads a single {@link Character} from device.
+	 * @return	{@link Character}
+	 */
+	public char readChar(){
+		if( connector != null ){
+			return (char) connector.read();
+		}
+		return 0;
+	}
+	
+	/**
+	 * Reads string from serial device.
+	 * @param num 	{@link Integer} number of chars to read.
+	 * @return 		{@link String} with {@code num} chars.
+	 */
+	public String readChars(int num){
+		if( connector != null ){
+			byte[] buffer = connector.read(num);
+			return new String( Arrays.toString(buffer) );
+		}
+		return null;
 	}
 	
 

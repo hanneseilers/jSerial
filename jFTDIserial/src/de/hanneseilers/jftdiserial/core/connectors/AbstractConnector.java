@@ -27,7 +27,7 @@ public abstract class AbstractConnector implements jFTDIserialConnector {
 	protected boolean loadRequiredLibs(String libFileName, boolean loadLib){
 		String libPath = "./;" + System.getProperty("java.library.path");
 		StringTokenizer libPathParser = new StringTokenizer(libPath, ";");
-		File libSource = getRxTxLibSource(libFileName);
+		File libSource = getLibSource(libFileName);
 		
 		if( libSource != null ){
 			while( libPathParser.hasMoreElements() ){
@@ -42,15 +42,15 @@ public abstract class AbstractConnector implements jFTDIserialConnector {
 					try{
 						// copy lib
 						copyFile( libSource, libDestination, true );
-						log.info("Copied lib to " + libDestination.getPath());
+						log.info("Copied lib to {}", libDestination.getPath());
 						if( loadLib ){
 							System.load(libDestination.getAbsolutePath());
 						}						
 						return true;
 					}catch (IOException e){
-						log.debug("Can not copy library to " + libDestination.getPath());
+						log.debug("Can not copy library to {}", libDestination.getPath());
 					}catch (UnsatisfiedLinkError e){
-						log.warn("Could not load library " + libDestination.getPath() + "!");
+						log.warn("Could not load library {}", libDestination.getPath() + "!");
 					}
 					
 				}
@@ -68,7 +68,7 @@ public abstract class AbstractConnector implements jFTDIserialConnector {
 	 * @param libFileName	{@link String} connectorName of library file wihtout prefix 'lib' or ending.
 	 * @return Library 		{@link File}, or {@code null} if no library for this os could be found.
 	 */
-	private File getRxTxLibSource(String libFileName){
+	private File getLibSource(String libFileName){
 		String os = System.getProperty("os.name").toLowerCase();
 		String bit = System.getProperty("sun.arch.data.model");
 		String ending = null;
@@ -83,6 +83,7 @@ public abstract class AbstractConnector implements jFTDIserialConnector {
 		// LINUX
 		else if( os.indexOf("nix") >= 0 || os.indexOf("nux") >= 0 || os.indexOf("aix") > 0 ){
 			os = "linux";
+			prefix ="lib";
 			ending = ".so";
 		}
 		// MAC
@@ -117,9 +118,9 @@ public abstract class AbstractConnector implements jFTDIserialConnector {
 			// get file
 			File libFile = new File("lib/" + connectorLibDir + "/"
 					+ os + "/" + bit + "/" + prefix + libFileName + ending);
-			log.debug("OS: " + os);
-			log.debug("BIT: " + bit);
-			log.debug("LIB: " + libFile.getPath());
+			log.debug("OS: {}",os);
+			log.debug("BIT: {}", bit);
+			log.debug("LIB: {}", libFile.getPath());
 			
 			if( libFile.isFile() ){
 				return libFile;
