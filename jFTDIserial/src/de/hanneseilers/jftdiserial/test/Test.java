@@ -11,6 +11,7 @@ import de.hanneseilers.jftdiserial.core.FTDISerial;
 import de.hanneseilers.jftdiserial.core.Parity;
 import de.hanneseilers.jftdiserial.core.SerialDevice;
 import de.hanneseilers.jftdiserial.core.StopBits;
+import de.hanneseilers.jftdiserial.core.exceptions.NoDataException;
 
 /**
  * Test class
@@ -31,7 +32,7 @@ public class Test {
 		// showing available libraries
 		List<String> libs = ftdi.getAvailableLibNames();
 		for( String lib : libs ){
-			log.debug("LIB: " + lib);
+			log.debug("LIB: {}", lib);
 		}
 		
 		// select first available lib manually
@@ -42,26 +43,40 @@ public class Test {
 		// showing available devices
 		List<SerialDevice> devices = ftdi.getAvailableDevices();
 		for( SerialDevice dev : devices ){
-			log.debug("DEVICE: " + dev);
+			log.debug("DEVICE: {}", dev);
 		}
 		
 		// setting connection settings
 		ftdi.setConnectionSettings(Baudrates.BAUD_300,
-				DataBits.DATABITS_8, StopBits.STOPBIT_1, Parity.NONE, 3000);
+				DataBits.DATABITS_8, StopBits.STOPBIT_1, Parity.NONE, 500);
 		
 		// connect to first device
 		if( devices.size() > 0 ){
 			ftdi.connect(devices.get(0));
 		}
-		log.debug("Connected to device = " + ftdi.isConnected());
+		log.debug("Connected to device = {}", ftdi.isConnected());
 		
 		// write and read data
 		if( ftdi.isConnected() ){
-			ftdi.write( (byte) 0xef );
-			for( byte b : ftdi.read(5) ){
-				log.debug(b);
+			ftdi.write( (byte) 0x3f );			
+			log.debug("write {} to device", (char) 0x3f);
+			
+			// read lines
+			int go = 10;
+			while( go > 0 ){
+				try {
+					System.out.print( ftdi.read() );
+				} catch (NoDataException e) {
+					e.printStackTrace();
+					go--;
+				}
 			}
+			
 		}
+		
+		// close connection
+		log.debug("Disconnecting");
+		ftdi.disconnect();
 	}
 
 }

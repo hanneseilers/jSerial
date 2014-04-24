@@ -11,12 +11,15 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
+
 import de.hanneseilers.jftdiserial.core.Baudrates;
 import de.hanneseilers.jftdiserial.core.DataBits;
 import de.hanneseilers.jftdiserial.core.Parity;
 import de.hanneseilers.jftdiserial.core.SerialDevice;
 import de.hanneseilers.jftdiserial.core.StopBits;
+import de.hanneseilers.jftdiserial.core.exceptions.NoDataException;
 
 public class RXTXConnector extends AbstractConnector {
 	
@@ -79,15 +82,6 @@ public class RXTXConnector extends AbstractConnector {
 	}
 
 	@Override
-	public boolean connect() {
-		List<SerialDevice> devices = getAvailableDevices();
-		if( devices.size() > 0 ){
-			return connect( devices.get(0) );
-		}
-		return false;
-	}
-
-	@Override
 	public boolean disconnect() {
 		if( device != null ){
 			try{
@@ -123,30 +117,38 @@ public class RXTXConnector extends AbstractConnector {
 	}
 
 	@Override
-	public byte read() {
+	public byte read() throws NoDataException {
 		return read(1)[0];
 	}
 
 	@Override
-	public byte[] read(int num) {
+	public byte[] read(int num) throws NoDataException {
 		byte[] buffer = new byte[num];		
 		try {
 			
-			if( device != null && input != null ){
+			if( device != null && input != null && input.available() > 0 ){
 				input.read(buffer);
+				return buffer;
 			}
 			
 		} catch (IOException e) {
 			log.error("Could not read data from serial port.");
 		}
 		
-		return buffer;
+		throw new NoDataException();
+	}
+	
+	@Override
+	public String readLine() throws NoDataException {
+		return null;
 	}
 
 	@Override
 	public boolean write(byte b) {
 		return write( new byte[]{b} );
 	}
+	
+	
 
 	@Override
 	public boolean write(byte[] buffer) {

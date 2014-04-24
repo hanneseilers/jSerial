@@ -8,12 +8,12 @@ import org.apache.logging.log4j.LogManager;
 import net.sf.yad2xx.Device;
 import net.sf.yad2xx.FTDIException;
 import net.sf.yad2xx.FTDIInterface;
-
 import de.hanneseilers.jftdiserial.core.Baudrates;
 import de.hanneseilers.jftdiserial.core.DataBits;
 import de.hanneseilers.jftdiserial.core.Parity;
 import de.hanneseilers.jftdiserial.core.SerialDevice;
 import de.hanneseilers.jftdiserial.core.StopBits;
+import de.hanneseilers.jftdiserial.core.exceptions.NoDataException;
 
 /**
  * FTD2xx 64 bit connector
@@ -45,7 +45,7 @@ public class YAD2xxConnector extends AbstractConnector {
 			libLoaded = loadRequiredLibs("FTDIInterface", true);			
 			if( libLoaded ){
 				ftdiInterface = new FTDIInterface();
-				log.info("Loaded " + getConnectorName());
+				log.info("Loaded {}", getConnectorName());
 			}
 		}catch (UnsatisfiedLinkError e){
 			libLoaded = false;
@@ -89,21 +89,12 @@ public class YAD2xxConnector extends AbstractConnector {
 			}
 			
 		} catch (FTDIException e) {
-			log.error("Could not connect to device " + sDevice);
+			log.error("Could not connect to device {}", sDevice);
 		} catch (IllegalStateException e){
-			log.error("Could not open device " + sDevice);
+			log.error("Could not open device {}", sDevice);
 		}
 		
 		
-		return false;
-	}
-
-	@Override
-	public boolean connect() {
-		List<SerialDevice> devices = getAvailableDevices();
-		if( devices.size() > 0 ){
-			return connect( devices.get(0) );
-		}
 		return false;
 	}
 
@@ -118,7 +109,7 @@ public class YAD2xxConnector extends AbstractConnector {
 			}
 			
 		}catch (FTDIException e){
-			log.error("Could not disconnect device " + device);
+			log.error("Could not disconnect device {}", device);
 		}
 		return false;
 	}
@@ -142,25 +133,47 @@ public class YAD2xxConnector extends AbstractConnector {
 	}
 
 	@Override
-	public byte read() {
+	public byte read() throws NoDataException {
 		return read(1)[0];
 	}
 
 	@Override
-	public byte[] read(int num) {
+	public byte[] read(int num) throws NoDataException {
 		byte[] buffer = new byte[num];
 		
 		try{
 			
-			if( device != null && device.isOpen()){
+			if( device != null && device.isOpen() ){
 				device.read(buffer);
+				return buffer;
 			}
 			
 		}catch (FTDIException e){
-			log.error("Exception while reading from device " + (device != null ? device.getSerialNumber() : device));
+			log.error("Exception while reading from device {}", (device != null ? device.getSerialNumber() : device));
 		}
 		
-		return buffer;
+		throw new NoDataException();
+	}
+	
+	@Override
+	public String readLine() throws NoDataException {
+		boolean vLineR = false;
+		boolean vLineN = false;
+		String s = "";
+		
+		while( (!vLineR || !vLineN) ){
+			char c = (char) read();
+			s += c;
+			
+			if( c == '\r' ){
+				vLineR = true;
+			}
+			if( c == '\n' ){
+				vLineN = true;
+			}
+		}
+		
+		return s;
 	}
 
 	@Override
@@ -178,11 +191,9 @@ public class YAD2xxConnector extends AbstractConnector {
 			}
 			
 		}catch (FTDIException e){
-			log.error("Exception while writing to device " + (device != null ? device.getSerialNumber() : device));
+			log.error("Exception while writing to device {}", (device != null ? device.getSerialNumber() : device));
 		}
 		return false;
 	}
-
-	
 
 }

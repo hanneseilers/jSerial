@@ -5,11 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
+
 import de.hanneseilers.jftdiserial.core.Baudrates;
 import de.hanneseilers.jftdiserial.core.DataBits;
 import de.hanneseilers.jftdiserial.core.Parity;
 import de.hanneseilers.jftdiserial.core.SerialDevice;
 import de.hanneseilers.jftdiserial.core.StopBits;
+import de.hanneseilers.jftdiserial.core.exceptions.NoDataException;
 import jd2xx.JD2XX;
 
 /**
@@ -37,7 +39,7 @@ public class JD2XXConnector extends AbstractConnector {
 			libLoaded = loadRequiredLibs("JD2XX", true);
 			if( libLoaded ){
 				device = new JD2XX();
-				log.info("Loaded " + getConnectorName());
+				log.info("Loaded {}", getConnectorName());
 			}
 		}catch (UnsatisfiedLinkError e){
 			libLoaded = false;
@@ -51,7 +53,7 @@ public class JD2XXConnector extends AbstractConnector {
 			
 			Object[] devs = device.listDevicesBySerialNumber();
 			for( Object dev : devs )
-				log.debug("found device: " + dev);
+				log.debug("found device: {}", dev);
 			
 		} catch (IOException e) {
 			log.error("Can not list serial devices.");
@@ -72,18 +74,9 @@ public class JD2XXConnector extends AbstractConnector {
 			}
 			
 		}catch (IOException e){
-			log.error("Could not connect to device " + sDevice);
+			log.error("Could not connect to device {}", sDevice);
 		}
 		
-		return false;
-	}
-
-	@Override
-	public boolean connect() {
-		List<SerialDevice> devices = getAvailableDevices();
-		if( devices.size() > 0 ){
-			return connect( devices.get(0) );
-		}
 		return false;
 	}
 
@@ -120,14 +113,17 @@ public class JD2XXConnector extends AbstractConnector {
 	}
 
 	@Override
-	public byte read() {
-		// TODO Auto-generated method stub
-		return 0;
+	public byte read() throws NoDataException {
+		throw new NoDataException();
 	}
 
 	@Override
-	public byte[] read(int num) {
-		// TODO Auto-generated method stub
+	public byte[] read(int num) throws NoDataException {
+		throw new NoDataException();
+	}
+	
+	@Override
+	public String readLine() {
 		return null;
 	}
 

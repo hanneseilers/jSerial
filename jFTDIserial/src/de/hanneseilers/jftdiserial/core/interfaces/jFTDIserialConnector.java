@@ -7,6 +7,7 @@ import de.hanneseilers.jftdiserial.core.DataBits;
 import de.hanneseilers.jftdiserial.core.Parity;
 import de.hanneseilers.jftdiserial.core.SerialDevice;
 import de.hanneseilers.jftdiserial.core.StopBits;
+import de.hanneseilers.jftdiserial.core.exceptions.NoDataException;
 
 public interface jFTDIserialConnector {
 
@@ -26,12 +27,6 @@ public interface jFTDIserialConnector {
 	 * @return {@code true } if successfull, {@code flase} otherwise.
 	 */
 	public boolean connect(SerialDevice sDevice);
-	
-	/**
-	 * Connects to the first available {@link SerialDevice}.
-	 * @return	{@code true} if successfull, {@code false} otherwise.
-	 */
-	public boolean connect();
 	
 	/**
 	 * Disconnects from {@link SerialDevice}.
@@ -59,14 +54,21 @@ public interface jFTDIserialConnector {
 	 * Reads a single byte from serial device
 	 * @return {@link Byte}
 	 */
-	public byte read();
+	public byte read() throws NoDataException;
 	
 	/**
-	 * Reads bytes from serial device and writes them into buffer.
+	 * Reads {@link Character} from serial device and writes them into buffer.
 	 * @param num 	{@link Integer} number of bytes to read
-	 * @return 		{@link Byte} array with {@code num} bytes.
+	 * @return 	{@link Character} array with {@code num} bytes.
+	 * 				If no more chars to read a array with first element = -1 is returned.
 	 */
-	public byte[] read(int num);
+	public byte[] read(int num) throws NoDataException;
+	
+	/**
+	 * Reads a line from device
+	 * @return	{@link String}
+	 */
+	public String readLine() throws NoDataException;
 	
 	/**
 	 * Writes a single byte to serial device

@@ -1,7 +1,6 @@
 package de.hanneseilers.jftdiserial.core;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -10,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import de.hanneseilers.jftdiserial.core.connectors.JD2XXConnector;
 import de.hanneseilers.jftdiserial.core.connectors.RXTXConnector;
 import de.hanneseilers.jftdiserial.core.connectors.YAD2xxConnector;
+import de.hanneseilers.jftdiserial.core.exceptions.NoDataException;
 import de.hanneseilers.jftdiserial.core.interfaces.jFTDIserialConnector;
 
 /**
@@ -93,7 +93,7 @@ public class FTDISerial implements jFTDIserialConnector {
 				// disconnect old connector and set new connector
 				disconnect();
 				connector = con;
-				log.info("Selected library " + connector.getConnectorName());
+				log.info("Selected library {}", connector.getConnectorName());
 			}
 		}
 	}
@@ -114,32 +114,7 @@ public class FTDISerial implements jFTDIserialConnector {
 	 */
 	public boolean isConnected() {
 		return connected;
-	}
-	
-	/**
-	 * Reads a single {@link Character} from device.
-	 * @return	{@link Character}
-	 */
-	public char readChar(){
-		if( connector != null ){
-			return (char) connector.read();
-		}
-		return 0;
-	}
-	
-	/**
-	 * Reads string from serial device.
-	 * @param num 	{@link Integer} number of chars to read.
-	 * @return 		{@link String} with {@code num} chars.
-	 */
-	public String readChars(int num){
-		if( connector != null ){
-			byte[] buffer = connector.read(num);
-			return new String( Arrays.toString(buffer) );
-		}
-		return null;
-	}
-	
+	}	
 
 	@Override
 	public List<SerialDevice> getAvailableDevices() {
@@ -157,10 +132,13 @@ public class FTDISerial implements jFTDIserialConnector {
 		return connected;
 	}
 
-	@Override
 	public boolean connect() {
 		if( connector != null ){
-			connected = connector.connect();
+			List<SerialDevice> devices = getAvailableDevices();
+			if( devices.size() > 0 ){
+				return connect( devices.get(0) );
+			}
+			return false;
 		}
 		return connected;
 	}
@@ -194,22 +172,31 @@ public class FTDISerial implements jFTDIserialConnector {
 	}
 
 	@Override
-	public byte read() {
+	public byte read() throws NoDataException {
 		if( connector != null ){
 			return connector.read();
 		}
-		return 0;
+		
+		throw new NoDataException();
 	}
 
 	@Override
-	public byte[] read(int num) {
+	public byte[] read(int num) throws NoDataException {
 		if( connector != null ){
 			return connector.read(num);
 		}
 		
-		return new byte[0];
+		throw new NoDataException();
 	}
-
+	
+	@Override
+	public String readLine() throws NoDataException {
+		if( connector != null ){
+			return connector.readLine();
+		}
+		return null;
+	}
+	
 	@Override
 	public boolean write(byte b) {
 		if( connector != null ){
@@ -218,7 +205,6 @@ public class FTDISerial implements jFTDIserialConnector {
 		return false;
 	}
 
-	@Override
 	public boolean write(byte[] buffer) {
 		if( connector != null ){
 			return connector.write(buffer);
@@ -228,7 +214,7 @@ public class FTDISerial implements jFTDIserialConnector {
 
 	@Override
 	public String getConnectorName() {
-		return null;
+		return "FTDISerial";
 	}
 
 }
