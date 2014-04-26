@@ -124,9 +124,9 @@ public class RXTXConnector extends AbstractConnector {
 	@Override
 	public byte[] read(int num) throws NoDataException {
 		byte[] buffer = new byte[num];		
-		try {
+		try {			
 			
-			if( device != null && input != null && input.available() > 0 ){
+			if( device != null && input != null ){
 				input.read(buffer);
 				return buffer;
 			}

@@ -64,10 +64,9 @@ public class Test {
 			// read lines
 			int go = 10;
 			while( go > 0 ){
-				try {
-					System.out.print( ftdi.read() );
+				try {					
+					System.out.print( (char) ftdi.read() );					
 				} catch (NoDataException e) {
-					e.printStackTrace();
 					go--;
 				}
 			}
