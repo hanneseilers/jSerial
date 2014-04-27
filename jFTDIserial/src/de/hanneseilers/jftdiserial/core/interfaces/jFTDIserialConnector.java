@@ -7,7 +7,6 @@ import de.hanneseilers.jftdiserial.core.DataBits;
 import de.hanneseilers.jftdiserial.core.Parity;
 import de.hanneseilers.jftdiserial.core.SerialDevice;
 import de.hanneseilers.jftdiserial.core.StopBits;
-import de.hanneseilers.jftdiserial.core.exceptions.NoDataException;
 
 public interface jFTDIserialConnector {
 
@@ -51,24 +50,41 @@ public interface jFTDIserialConnector {
 	public boolean isLibLoaded();
 	
 	/**
-	 * Reads a single byte from serial device
-	 * @return {@link Byte}
+	 * Registers a {@link SerialDataRecievedListener}.
+	 * @param listener	{@link SerialDataRecievedListener} to register
 	 */
-	public byte read() throws NoDataException;
+	public void addSerialDataRecievedListener(SerialDataRecievedListener listener);
 	
 	/**
-	 * Reads {@link Character} from serial device and writes them into buffer.
-	 * @param num 	{@link Integer} number of bytes to read
-	 * @return 	{@link Character} array with {@code num} bytes.
-	 * 				If no more chars to read a array with first element = -1 is returned.
+	 * Unregisters a {@link SerialDataRecievedListener}.
+	 * @param listener	{@link SerialDataRecievedListener} to unregister
 	 */
-	public byte[] read(int num) throws NoDataException;
+	public void removeSerialDataRecievedListener(SerialDataRecievedListener listener);
 	
 	/**
-	 * Reads a line from device
-	 * @return	{@link String}
+	 * Unregisters all {@link SerialDataRecievedListener}.
 	 */
-	public String readLine() throws NoDataException;
+	public void removeAllSerialDataRecievedListener();
+	
+//	/**
+//	 * Reads a single byte from serial device
+//	 * @return {@link Byte}
+//	 */
+//	public byte read();
+//	
+//	/**
+//	 * Reads {@link Character} from serial device and writes them into buffer.
+//	 * @param num 	{@link Integer} number of bytes to read
+//	 * @return 	{@link Character} array with {@code num} bytes.
+//	 * 				If no more chars to read a array with first element = -1 is returned.
+//	 */
+//	public byte[] read(int num);
+//	
+//	/**
+//	 * Reads a line from device
+//	 * @return	{@link String}
+//	 */
+//	public String readLine();
 	
 	/**
 	 * Writes a single byte to serial device

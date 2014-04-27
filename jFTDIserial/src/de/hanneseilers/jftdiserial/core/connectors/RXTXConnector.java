@@ -4,6 +4,8 @@ import gnu.io.CommPort;
 import gnu.io.CommPortIdentifier;
 import gnu.io.PortInUseException;
 import gnu.io.SerialPort;
+import gnu.io.SerialPortEvent;
+import gnu.io.SerialPortEventListener;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,7 +13,6 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
-
 import org.apache.logging.log4j.LogManager;
 
 import de.hanneseilers.jftdiserial.core.Baudrates;
@@ -19,9 +20,8 @@ import de.hanneseilers.jftdiserial.core.DataBits;
 import de.hanneseilers.jftdiserial.core.Parity;
 import de.hanneseilers.jftdiserial.core.SerialDevice;
 import de.hanneseilers.jftdiserial.core.StopBits;
-import de.hanneseilers.jftdiserial.core.exceptions.NoDataException;
 
-public class RXTXConnector extends AbstractConnector {
+public class RXTXConnector extends AbstractConnector implements SerialPortEventListener {
 	
 	private SerialPort device;
 	private InputStream input;
@@ -68,6 +68,8 @@ public class RXTXConnector extends AbstractConnector {
 			CommPort com = sDevice.getRxTxDevice().open(this.getConnectorName(), timeout);
 			device = (SerialPort) com;				
 			device.setSerialPortParams(baudrate.baud, dataBits.bits_rxtx, stopBits.bits_rxtx, parity.parity_rxtx);
+			device.addEventListener(this);
+			device.notifyOnDataAvailable(true);
 			
 			input = device.getInputStream();
 			output = device.getOutputStream();
@@ -117,39 +119,10 @@ public class RXTXConnector extends AbstractConnector {
 	}
 
 	@Override
-	public byte read() throws NoDataException {
-		return read(1)[0];
-	}
-
-	@Override
-	public byte[] read(int num) throws NoDataException {
-		byte[] buffer = new byte[num];		
-		try {			
-			
-			if( device != null && input != null ){
-				input.read(buffer);
-				return buffer;
-			}
-			
-		} catch (IOException e) {
-			log.error("Could not read data from serial port.");
-		}
-		
-		throw new NoDataException();
-	}
-	
-	@Override
-	public String readLine() throws NoDataException {
-		return null;
-	}
-
-	@Override
 	public boolean write(byte b) {
 		return write( new byte[]{b} );
 	}
 	
-	
-
 	@Override
 	public boolean write(byte[] buffer) {
 		try{
@@ -163,6 +136,19 @@ public class RXTXConnector extends AbstractConnector {
 		}
 		
 		return false;
+	}
+
+	@Override
+	public void serialEvent(SerialPortEvent event) {
+		if( event.getEventType() == SerialPortEvent.DATA_AVAILABLE ){
+			
+			try {
+				byte[] buffer = new byte[1];
+				input.read( buffer );
+				notifySerialDataRecievedListener( buffer[0] );
+			} catch (IOException e) {}
+			
+		}
 	}
 
 }

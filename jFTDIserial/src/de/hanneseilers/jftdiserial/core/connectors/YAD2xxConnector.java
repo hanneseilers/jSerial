@@ -13,7 +13,6 @@ import de.hanneseilers.jftdiserial.core.DataBits;
 import de.hanneseilers.jftdiserial.core.Parity;
 import de.hanneseilers.jftdiserial.core.SerialDevice;
 import de.hanneseilers.jftdiserial.core.StopBits;
-import de.hanneseilers.jftdiserial.core.exceptions.NoDataException;
 
 /**
  * FTD2xx 64 bit connector
@@ -85,6 +84,10 @@ public class YAD2xxConnector extends AbstractConnector {
 				device.open();
 				device.setTimeouts(timeout, timeout);
 				device.setBaudRate(baudrate.baud);
+				
+				// start reading
+				new Thread( new SerialDataReader(device) ).start();
+				
 				return true;
 			}
 			
@@ -133,50 +136,6 @@ public class YAD2xxConnector extends AbstractConnector {
 	}
 
 	@Override
-	public byte read() throws NoDataException {
-		return read(1)[0];
-	}
-
-	@Override
-	public byte[] read(int num) throws NoDataException {
-		byte[] buffer = new byte[num];
-		
-		try{
-			
-			if( device != null && device.isOpen() ){
-				device.read(buffer);
-				return buffer;
-			}
-			
-		}catch (FTDIException e){
-			log.error("Exception while reading from device {}", (device != null ? device.getSerialNumber() : device));
-		}
-		
-		throw new NoDataException();
-	}
-	
-	@Override
-	public String readLine() throws NoDataException {
-		boolean vLineR = false;
-		boolean vLineN = false;
-		String s = "";
-		
-		while( (!vLineR || !vLineN) ){
-			char c = (char) read();
-			s += c;
-			
-			if( c == '\r' ){
-				vLineR = true;
-			}
-			if( c == '\n' ){
-				vLineN = true;
-			}
-		}
-		
-		return s;
-	}
-
-	@Override
 	public boolean write(byte b) {
 		return write( new byte[]{b} );
 	}
@@ -185,15 +144,48 @@ public class YAD2xxConnector extends AbstractConnector {
 	public boolean write(byte[] buffer) {
 		try{
 			
-			if( device != null && !device.isOpen() ){
+			if( device != null && device.isOpen() ){
 				device.write(buffer);
 				return true;
 			}
 			
 		}catch (FTDIException e){
-			log.error("Exception while writing to device {}", (device != null ? device.getSerialNumber() : device));
+			log.warn("Exception while writing to device {}", (device != null ? device.getSerialNumber() : device));
 		}
 		return false;
+	}
+	
+	/**
+	 * Class for readings data from serial port
+	 * @author Hannes Eilers
+	 *
+	 */
+	private class SerialDataReader implements Runnable{
+
+		private Device device;
+		
+		public SerialDataReader(Device aDevice) {
+			device = aDevice;
+		}
+		
+		@Override
+		public void run() {
+			boolean active = true;
+			
+			while( active && device.isOpen() ){
+				try {
+					byte[] buffer = new byte[1];
+					if( device.read( buffer ) > 0){
+						notifySerialDataRecievedListener( buffer[0] );
+					}
+					
+				} catch (FTDIException e) {
+					log.warn("Exception while reading from device {}", (device != null ? device.getSerialNumber() : device));
+					active = false;
+				}
+			}
+		}
+
 	}
 
 }

@@ -4,11 +4,15 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import de.hanneseilers.jftdiserial.core.SerialDataRecievedRunnable;
+import de.hanneseilers.jftdiserial.core.interfaces.SerialDataRecievedListener;
 import de.hanneseilers.jftdiserial.core.interfaces.jFTDIserialConnector;
 
 public abstract class AbstractConnector implements jFTDIserialConnector {
@@ -17,6 +21,45 @@ public abstract class AbstractConnector implements jFTDIserialConnector {
 	protected String connectorLibDir = "connector";
 	protected boolean libLoaded = false;
 	protected Logger log = LogManager.getLogger();
+	protected List<SerialDataRecievedListener> serialDataRecievedListeners = new ArrayList<SerialDataRecievedListener>();
+	
+	@Override
+	public void addSerialDataRecievedListener(SerialDataRecievedListener listener){
+		synchronized (serialDataRecievedListeners) {
+			serialDataRecievedListeners.add(listener);
+			log.debug("Added listener {}", listener);
+		}
+	}
+	
+	@Override
+	public void removeSerialDataRecievedListener(SerialDataRecievedListener listener){
+		synchronized (serialDataRecievedListeners) {
+			serialDataRecievedListeners.remove(listener);
+			log.debug("Removed listener {}", listener);
+		}
+	}
+	
+	@Override
+	public void removeAllSerialDataRecievedListener(){
+		synchronized (serialDataRecievedListeners) {
+			serialDataRecievedListeners.clear();
+			log.debug("Removed all listener");
+		}
+	}
+	
+	/**
+	 * Notifies all registered {@link SerialDataRecievedListener} about new data.
+	 * @param data	Recieved {@link Byte} data 
+	 */
+	protected void notifySerialDataRecievedListener(byte data){
+		synchronized (serialDataRecievedListeners) {
+			for( SerialDataRecievedListener listener : serialDataRecievedListeners ){
+				new Thread( new SerialDataRecievedRunnable(listener, data) ).start();
+				
+			}
+		}
+	}
+	
 	
 	/**
 	 * Copies required library files to a valid destination directory and loads library.

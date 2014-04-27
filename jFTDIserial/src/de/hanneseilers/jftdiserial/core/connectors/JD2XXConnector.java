@@ -11,7 +11,6 @@ import de.hanneseilers.jftdiserial.core.DataBits;
 import de.hanneseilers.jftdiserial.core.Parity;
 import de.hanneseilers.jftdiserial.core.SerialDevice;
 import de.hanneseilers.jftdiserial.core.StopBits;
-import de.hanneseilers.jftdiserial.core.exceptions.NoDataException;
 import jd2xx.JD2XX;
 
 /**
@@ -111,22 +110,7 @@ public class JD2XXConnector extends AbstractConnector {
 	public boolean isLibLoaded() {
 		return libLoaded;
 	}
-
-	@Override
-	public byte read() throws NoDataException {
-		throw new NoDataException();
-	}
-
-	@Override
-	public byte[] read(int num) throws NoDataException {
-		throw new NoDataException();
-	}
 	
-	@Override
-	public String readLine() {
-		return null;
-	}
-
 	@Override
 	public boolean write(byte b) {
 		// TODO Auto-generated method stub

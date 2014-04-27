@@ -9,7 +9,7 @@ import org.apache.logging.log4j.Logger;
 import de.hanneseilers.jftdiserial.core.connectors.JD2XXConnector;
 import de.hanneseilers.jftdiserial.core.connectors.RXTXConnector;
 import de.hanneseilers.jftdiserial.core.connectors.YAD2xxConnector;
-import de.hanneseilers.jftdiserial.core.exceptions.NoDataException;
+import de.hanneseilers.jftdiserial.core.interfaces.SerialDataRecievedListener;
 import de.hanneseilers.jftdiserial.core.interfaces.jFTDIserialConnector;
 
 /**
@@ -17,12 +17,14 @@ import de.hanneseilers.jftdiserial.core.interfaces.jFTDIserialConnector;
  * @author Hannes Eilers
  *
  */
-public class FTDISerial implements jFTDIserialConnector {
+public class FTDISerial implements jFTDIserialConnector, SerialDataRecievedListener {
 
 	private static final Logger log = LogManager.getLogger();
 	private List<jFTDIserialConnector> connectors = new ArrayList<jFTDIserialConnector>();
 	private jFTDIserialConnector connector = null;	
 	private boolean connected = false;
+	
+	private List<SerialDataRecievedListener> serialDataRecievedListeners = new ArrayList<SerialDataRecievedListener>();
 	
 	/**
 	 * Constructor
@@ -93,6 +95,7 @@ public class FTDISerial implements jFTDIserialConnector {
 				// disconnect old connector and set new connector
 				disconnect();
 				connector = con;
+				connector.addSerialDataRecievedListener(this);
 				log.info("Selected library {}", connector.getConnectorName());
 			}
 		}
@@ -146,6 +149,7 @@ public class FTDISerial implements jFTDIserialConnector {
 	@Override
 	public boolean disconnect() {
 		if( connector != null ){
+			connector.removeAllSerialDataRecievedListener();
 			if( connector.disconnect() ){
 				connected = false;
 				return true;
@@ -170,32 +174,6 @@ public class FTDISerial implements jFTDIserialConnector {
 		}
 		return false;
 	}
-
-	@Override
-	public byte read() throws NoDataException {
-		if( connector != null ){
-			return connector.read();
-		}
-		
-		throw new NoDataException();
-	}
-
-	@Override
-	public byte[] read(int num) throws NoDataException {
-		if( connector != null ){
-			return connector.read(num);
-		}
-		
-		throw new NoDataException();
-	}
-	
-	@Override
-	public String readLine() throws NoDataException {
-		if( connector != null ){
-			return connector.readLine();
-		}
-		return null;
-	}
 	
 	@Override
 	public boolean write(byte b) {
@@ -214,7 +192,49 @@ public class FTDISerial implements jFTDIserialConnector {
 
 	@Override
 	public String getConnectorName() {
-		return "FTDISerial";
+		return "jFTDIserial";
+	}
+
+	@Override
+	public void addSerialDataRecievedListener(SerialDataRecievedListener listener){
+		synchronized (serialDataRecievedListeners) {
+			serialDataRecievedListeners.add(listener);
+			log.debug("Added listener {}", listener);
+		}
+	}
+	
+	@Override
+	public void removeSerialDataRecievedListener(SerialDataRecievedListener listener){
+		synchronized (serialDataRecievedListeners) {
+			serialDataRecievedListeners.remove(listener);
+			log.debug("Removed listener {}", listener);
+		}
+	}
+	
+	@Override
+	public void removeAllSerialDataRecievedListener(){
+		synchronized (serialDataRecievedListeners) {
+			serialDataRecievedListeners.clear();
+			log.debug("Removed all listener");
+		}
+	}
+	
+	/**
+	 * Notifies all registered {@link SerialDataRecievedListener} about new data.
+	 * @param data	Recieved {@link Byte} data 
+	 */
+	protected void notifySerialDataRecievedListener(byte data){
+		synchronized (serialDataRecievedListeners) {
+			for( SerialDataRecievedListener listener : serialDataRecievedListeners ){
+				new Thread( new SerialDataRecievedRunnable(listener, data) ).start();
+				
+			}
+		}
+	}
+	
+	@Override
+	public void serialDataRecieved(byte data) {
+		notifySerialDataRecievedListener( data );
 	}
 
 }
