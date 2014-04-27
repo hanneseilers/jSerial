@@ -125,14 +125,12 @@ public class RXTXConnector extends AbstractConnector implements SerialPortEventL
 	
 	@Override
 	public boolean write(byte[] buffer) {
-		try{
-			
-			if( device != null && output != null ){
+		if( device != null && output != null ){
+			try{
 				output.write(buffer);
+			}catch (IOException e){
+				log.error("Could not write data to serial port {}", device.getName());
 			}
-			
-		}catch (IOException e){
-			log.error("Could not write data to serial port.");
 		}
 		
 		return false;
@@ -146,7 +144,9 @@ public class RXTXConnector extends AbstractConnector implements SerialPortEventL
 				byte[] buffer = new byte[1];
 				input.read( buffer );
 				notifySerialDataRecievedListener( buffer[0] );
-			} catch (IOException e) {}
+			} catch (IOException e) {
+				log.error("Error recieving data byte from {}", device.getName());
+			}
 			
 		}
 	}
