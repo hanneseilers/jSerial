@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_run_jar" name="Create Runnable Jar for Project jFTDIserial">
+    <!--this file was created by Eclipse Runnable JAR Export Wizard-->
+    <!--ANT 1.7 is required                                        -->
+    <target name="create_run_jar">
+        <jar destfile="E:/vbox/jftdiserial.jar" filesetmanifest="mergewithoutmain">
+            <manifest>
+                <attribute name="Main-Class" value="de.hanneseilers.jftdiserial.test.Test"/>
+                <attribute name="Class-Path" value="."/>
+            </manifest>
+            <fileset dir="E:/workspace/jFTDIserial/jFTDIserial/bin"/>
+            <zipfileset excludes="META-INF/*.SF" src="E:/workspace/jFTDIserial/jFTDIserial/jd2xx.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="E:/workspace/jFTDIserial/jFTDIserial/log4j-api-2.0-rc1.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="E:/workspace/jFTDIserial/jFTDIserial/log4j-core-2.0-rc1.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="E:/workspace/jFTDIserial/jFTDIserial/yad2xx.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="E:/workspace/jFTDIserial/jFTDIserial/rxtx-2.2pre2.jar"/>
+        </jar>
+    </target>
+</project>
