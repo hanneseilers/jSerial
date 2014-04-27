@@ -3,6 +3,7 @@ package de.hanneseilers.jftdiserial.core.connectors;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TooManyListenersException;
 
 import org.apache.logging.log4j.LogManager;
 
@@ -12,13 +13,15 @@ import de.hanneseilers.jftdiserial.core.Parity;
 import de.hanneseilers.jftdiserial.core.SerialDevice;
 import de.hanneseilers.jftdiserial.core.StopBits;
 import jd2xx.JD2XX;
+import jd2xx.JD2XXEvent;
+import jd2xx.JD2XXEventListener;
 
 /**
  * FTD2XX 32 bit connector
  * @author Hannes Eilers
  *
  */
-public class JD2XXConnector extends AbstractConnector {
+public class JD2XXConnector extends AbstractConnector implements JD2XXEventListener {
 	
 	private JD2XX device = null;
 	private boolean libLoaded = false;
@@ -70,10 +73,15 @@ public class JD2XXConnector extends AbstractConnector {
 				device.setTimeouts(timeout, timeout);
 				device.setBaudRate(baudrate.baud);
 				device.setDataCharacteristics(dataBits.bits, stopBits.bits_jd2xx, parity.parity_jd2xx);
+				
+				// Add listener
+				device.addEventListener(this);
 			}
 			
 		}catch (IOException e){
 			log.error("Could not connect to device {}", sDevice);
+		} catch (TooManyListenersException e) {
+			log.error("Could not add data recieved listener to device {}", sDevice);
 		}
 		
 		return false;
@@ -113,14 +121,31 @@ public class JD2XXConnector extends AbstractConnector {
 	
 	@Override
 	public boolean write(byte b) {
-		// TODO Auto-generated method stub
-		return false;
+		return write( new byte[]{b} );
 	}
 
 	@Override
 	public boolean write(byte[] buffer) {
-		// TODO Auto-generated method stub
+		try {
+			device.write(buffer);
+			return true;
+		} catch (IOException e) {
+			log.error("Could not write data to serial port {}", device);
+		}
 		return false;
+	}
+
+	@Override
+	public void jd2xxEvent(JD2XXEvent event) {
+		if( event.getEventType() == JD2XXEvent.EVENT_RXCHAR ){
+			try {
+				for( byte b : device.read(1) ){
+					notifySerialDataRecievedListener( b );
+				}				
+			} catch (IOException e) {
+				log.warn("Error recieving data byte from {}", device);
+			}
+		}
 	}
 
 }
