@@ -236,7 +236,6 @@ public class FTDISerial implements jFTDIserialConnector, SerialDataRecievedListe
 	
 	@Override
 	public void serialDataRecieved(byte data) {
-		log.debug("data recieved {}", data);
 		notifySerialDataRecievedListener( data );
 	}
 
