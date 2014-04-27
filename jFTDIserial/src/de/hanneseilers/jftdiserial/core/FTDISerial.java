@@ -162,6 +162,8 @@ public class FTDISerial implements jFTDIserialConnector, SerialDataRecievedListe
 	public boolean setConnectionSettings(Baudrates baudrate, DataBits dataBits,
 			StopBits stopBits, Parity parity, int timeout) {
 		if( connector != null ){
+			log.debug("Setting connection settings: {} {} {} {} {}",
+					baudrate, dataBits, stopBits, parity, timeout);
 			return connector.setConnectionSettings(baudrate, dataBits, stopBits, parity, timeout);
 		}
 		return false;
@@ -234,6 +236,7 @@ public class FTDISerial implements jFTDIserialConnector, SerialDataRecievedListe
 	
 	@Override
 	public void serialDataRecieved(byte data) {
+		log.debug("data recieved {}", data);
 		notifySerialDataRecievedListener( data );
 	}
 
