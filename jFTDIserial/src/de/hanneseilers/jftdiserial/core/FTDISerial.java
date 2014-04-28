@@ -120,7 +120,7 @@ public class FTDISerial implements jFTDIserialConnector, SerialDataRecievedListe
 	}	
 
 	@Override
-	public List<SerialDevice> getAvailableDevices() {
+	synchronized public List<SerialDevice> getAvailableDevices() {
 		if( connector != null ){
 			return connector.getAvailableDevices();
 		}
@@ -178,14 +178,14 @@ public class FTDISerial implements jFTDIserialConnector, SerialDataRecievedListe
 	}
 	
 	@Override
-	public boolean write(byte b) {
+	synchronized public boolean write(byte b) {
 		if( connector != null ){
 			return connector.write(b);
 		}
 		return false;
 	}
 
-	public boolean write(byte[] buffer) {
+	synchronized public boolean write(byte[] buffer) {
 		if( connector != null ){
 			return connector.write(buffer);
 		}
