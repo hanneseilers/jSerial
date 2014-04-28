@@ -19,6 +19,8 @@ import de.hanneseilers.jftdiserial.core.interfaces.jFTDIserialConnector;
  */
 public class FTDISerial implements jFTDIserialConnector, SerialDataRecievedListener {
 
+	public static boolean connectorLibsLoaded = false;
+	
 	private static final Logger log = LogManager.getLogger();
 	private List<jFTDIserialConnector> connectors = new ArrayList<jFTDIserialConnector>();
 	private jFTDIserialConnector connector = null;	
@@ -31,6 +33,7 @@ public class FTDISerial implements jFTDIserialConnector, SerialDataRecievedListe
 	 */
 	public FTDISerial() {		
 		registerConnectors();
+		connectorLibsLoaded = true;
 		selectFirstAvailableLib();
 	}
 	
