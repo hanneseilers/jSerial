@@ -66,26 +66,6 @@ public interface jFTDIserialConnector {
 	 */
 	public void removeAllSerialDataRecievedListener();
 	
-//	/**
-//	 * Reads a single byte from serial device
-//	 * @return {@link Byte}
-//	 */
-//	public byte read();
-//	
-//	/**
-//	 * Reads {@link Character} from serial device and writes them into buffer.
-//	 * @param num 	{@link Integer} number of bytes to read
-//	 * @return 	{@link Character} array with {@code num} bytes.
-//	 * 				If no more chars to read a array with first element = -1 is returned.
-//	 */
-//	public byte[] read(int num);
-//	
-//	/**
-//	 * Reads a line from device
-//	 * @return	{@link String}
-//	 */
-//	public String readLine();
-	
 	/**
 	 * Writes a single byte to serial device
 	 * @param b	{@link Byte}
