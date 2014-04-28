@@ -52,7 +52,7 @@ public class YAD2xxConnector extends AbstractConnector {
 	}
 	
 	@Override
-	public List<SerialDevice> getAvailableDevices() {
+	synchronized public List<SerialDevice> getAvailableDevices() {
 		List<SerialDevice> devices = new ArrayList<SerialDevice>();		
 		try {
 			
@@ -136,12 +136,12 @@ public class YAD2xxConnector extends AbstractConnector {
 	}
 
 	@Override
-	public boolean write(byte b) {
+	synchronized public boolean write(byte b) {
 		return write( new byte[]{b} );
 	}
 
 	@Override
-	public boolean write(byte[] buffer) {
+	synchronized public boolean write(byte[] buffer) {
 		try{
 			
 			if( device != null && device.isOpen() ){

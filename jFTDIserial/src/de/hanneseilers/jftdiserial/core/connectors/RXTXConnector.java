@@ -46,7 +46,7 @@ public class RXTXConnector extends AbstractConnector implements SerialPortEventL
 	}
 
 	@Override
-	public List<SerialDevice> getAvailableDevices() {
+	synchronized  public List<SerialDevice> getAvailableDevices() {
 		List<SerialDevice> devices = new ArrayList<SerialDevice>();
 		
 		@SuppressWarnings("unchecked")
@@ -124,7 +124,7 @@ public class RXTXConnector extends AbstractConnector implements SerialPortEventL
 	}
 	
 	@Override
-	public boolean write(byte[] buffer) {
+	synchronized public boolean write(byte[] buffer) {
 		if( device != null && output != null ){
 			try{
 				output.write(buffer);

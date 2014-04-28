@@ -11,6 +11,7 @@ import java.util.StringTokenizer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import de.hanneseilers.jftdiserial.core.FTDISerial;
 import de.hanneseilers.jftdiserial.core.SerialDataRecievedRunnable;
 import de.hanneseilers.jftdiserial.core.interfaces.SerialDataRecievedListener;
 import de.hanneseilers.jftdiserial.core.interfaces.jFTDIserialConnector;
@@ -68,6 +69,10 @@ public abstract class AbstractConnector implements jFTDIserialConnector {
 	 * @return 				{@code true\ if successfull, {@code false} otherwise.
 	 */
 	protected boolean loadRequiredLibs(String libFileName, boolean loadLib){
+		if( FTDISerial.connectorLibsLoaded ){
+			return true;
+		}
+		
 		String libPath = "./;" + System.getProperty("java.library.path");
 		StringTokenizer libPathParser = new StringTokenizer(libPath, ";");
 		File libSource = getLibSource(libFileName);
