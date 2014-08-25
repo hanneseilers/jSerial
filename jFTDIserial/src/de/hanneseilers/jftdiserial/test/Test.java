@@ -52,7 +52,7 @@ public class Test implements SerialDataRecievedListener {
 		}
 
 		// setting connection settings
-		ftdi.setConnectionSettings(Baudrates.BAUD_300,
+		ftdi.setConnectionSettings(Baudrates.BAUD_9600,
 				DataBits.DATABITS_8, StopBits.STOPBIT_1, Parity.NONE, 500);
 		
 		// showing available devices
@@ -82,6 +82,7 @@ public class Test implements SerialDataRecievedListener {
 		
 		// write and read data
 		if( ftdi.isConnected() ){
+			
 			ftdi.write( (byte) 0x3f );			
 			log.debug("write {} to device", (char) 0x3f);
 			
