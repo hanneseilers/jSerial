@@ -13,4 +13,4 @@ Used libraries
 Licence
 -------
 You can use jFTDIserial for private use as you want. You're also free to modify jFTDIserial depending on your own needs.
-Take care of the licences of the used libraries (see above) and also refer to die LICENCE file for details about the jFTDIserial licence.
+Take care of the licences of the used libraries (see above) and also refer to LICENCE file for details about the jFTDIserial licence.
