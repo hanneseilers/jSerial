@@ -73,8 +73,8 @@ public abstract class AbstractConnector implements jFTDIserialConnector {
 			return true;
 		}
 		
-		String libPath = "./;" + System.getProperty("java.library.path");
-		StringTokenizer libPathParser = new StringTokenizer(libPath, ";");
+		String libPath = "./:"  + System.getProperty("java.library.path");
+		StringTokenizer libPathParser = new StringTokenizer(libPath, ":");
 		File libSource = getLibSource(libFileName);
 		
 		if( libSource != null ){
@@ -85,16 +85,15 @@ public abstract class AbstractConnector implements jFTDIserialConnector {
 				File libDestination = new File(libPath + "/" + libSource.getName());
 				
 				// check if can write in path
-				if( libSource.canRead() ){
+				if( libSource.canRead() && libDestination.canWrite() ){
 					
 					try{
 						// copy lib
-						// TODO: check for errors on loading 64bit linux lib
 						copyFile( libSource, libDestination, true );
-						log.info("Copied lib to {}", libDestination.getPath());
+						log.info("Copied lib to {}", libDestination.getAbsolutePath());
 						if( loadLib ){
-							System.load(libDestination.getAbsolutePath());
-							log.debug("Loaded library " + libDestination.getAbsolutePath());
+							System.load( libDestination.getAbsolutePath() );
+							log.debug("Loaded library " + libDestination.getAbsolutePath().replace("./", ""));
 						} else throw new IOException();						
 						return true;
 					}catch (IOException e){

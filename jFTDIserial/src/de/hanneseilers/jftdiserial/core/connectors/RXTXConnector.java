@@ -39,6 +39,7 @@ public class RXTXConnector extends AbstractConnector implements SerialPortEventL
 		connectorName = "rxtx serial";
 		connectorLibDir = "rxtx";
 		
+		System.getProperty("java.library.path");
 		libLoaded = loadRequiredLibs("rxtxSerial", true);
 		if( libLoaded ){
 			log.info("Loaded " + getConnectorName());
