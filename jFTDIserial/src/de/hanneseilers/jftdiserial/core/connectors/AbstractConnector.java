@@ -89,11 +89,13 @@ public abstract class AbstractConnector implements jFTDIserialConnector {
 					
 					try{
 						// copy lib
+						// TODO: check for errors on loading 64bit linux lib
 						copyFile( libSource, libDestination, true );
 						log.info("Copied lib to {}", libDestination.getPath());
 						if( loadLib ){
 							System.load(libDestination.getAbsolutePath());
-						}						
+							log.debug("Loaded library " + libDestination.getAbsolutePath());
+						} else throw new IOException();						
 						return true;
 					}catch (IOException e){
 						log.debug("Can not copy library to {}", libDestination.getPath());
@@ -237,20 +239,21 @@ public abstract class AbstractConnector implements jFTDIserialConnector {
                 while ((bytesRead = fis.read(buffer)) != -1) {
                     fos.write(buffer, 0, bytesRead);
                 }
+                fos.flush();
 
             } finally {
                 if (from != null) {
                     try {
                         fis.close();
                     } catch (IOException e) {
-                      System.out.println(e);
+                      System.err.println(e);
                     }
                 }
                 if (to != null) {
                     try {
                         fos.close();
                     } catch (IOException e) {
-                        System.out.println(e);
+                        System.err.println(e);
                     }
                 }
             }

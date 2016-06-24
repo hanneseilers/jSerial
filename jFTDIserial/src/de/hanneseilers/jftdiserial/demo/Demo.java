@@ -1,4 +1,4 @@
-package de.hanneseilers.jftdiserial.test;
+package de.hanneseilers.jftdiserial.demo;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -21,12 +21,15 @@ import de.hanneseilers.jftdiserial.core.interfaces.SerialDataRecievedListener;
  * @author Hannes Eilers
  *
  */
-public class Test implements SerialDataRecievedListener {
+public class Demo implements SerialDataRecievedListener {
 
 	private static final Logger log = LogManager.getLogger();
 	
 	public void test(){
 		log.debug("Createing FTDIserial");
+		System.out.println("Working Directory = " +
+	              System.getProperty("user.dir"));
+		
 		FTDISerial ftdi = new FTDISerial();
 		BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
 		
@@ -111,7 +114,7 @@ public class Test implements SerialDataRecievedListener {
 	 * @throws IOException 
 	 */
 	public static void main(String[] args) throws IOException {
-		Test t = new Test();
+		Demo t = new Demo();
 		t.test();
 	}
 
