@@ -2,3 +2,5 @@
 /rxtxSerial.dll
 /jftdiserial.jar
 /librxtxSerial.so
+
+*.log
