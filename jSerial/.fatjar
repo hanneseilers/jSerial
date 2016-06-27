@@ -1,10 +1,10 @@
 #Fat Jar Configuration File
-#Thu Aug 21 17:05:27 CEST 2014
+#Mon Jun 27 10:28:01 CEST 2016
 onejar.license.required=true
 manifest.classpath=
 manifest.removesigners=true
 onejar.checkbox=false
-jarname=jFTDIserial.jar
+jarname=jSerial.jar
 manifest.mergeall=true
 manifest.mainclass=
 manifest.file=.fatjar
