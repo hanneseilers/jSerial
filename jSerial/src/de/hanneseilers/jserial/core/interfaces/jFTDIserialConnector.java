@@ -1,12 +1,12 @@
-package de.hanneseilers.jftdiserial.core.interfaces;
+package de.hanneseilers.jserial.core.interfaces;
 
 import java.util.List;
 
-import de.hanneseilers.jftdiserial.core.Baudrates;
-import de.hanneseilers.jftdiserial.core.DataBits;
-import de.hanneseilers.jftdiserial.core.Parity;
-import de.hanneseilers.jftdiserial.core.SerialDevice;
-import de.hanneseilers.jftdiserial.core.StopBits;
+import de.hanneseilers.jserial.core.Baudrates;
+import de.hanneseilers.jserial.core.DataBits;
+import de.hanneseilers.jserial.core.Parity;
+import de.hanneseilers.jserial.core.SerialDevice;
+import de.hanneseilers.jserial.core.StopBits;
 
 public interface jFTDIserialConnector {
 

@@ -1,18 +1,18 @@
-package de.hanneseilers.jftdiserial.core.connectors;
+package de.hanneseilers.jserial.core.connectors;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 
+import de.hanneseilers.jserial.core.Baudrates;
+import de.hanneseilers.jserial.core.DataBits;
+import de.hanneseilers.jserial.core.Parity;
+import de.hanneseilers.jserial.core.SerialDevice;
+import de.hanneseilers.jserial.core.StopBits;
 import net.sf.yad2xx.Device;
 import net.sf.yad2xx.FTDIException;
 import net.sf.yad2xx.FTDIInterface;
-import de.hanneseilers.jftdiserial.core.Baudrates;
-import de.hanneseilers.jftdiserial.core.DataBits;
-import de.hanneseilers.jftdiserial.core.Parity;
-import de.hanneseilers.jftdiserial.core.SerialDevice;
-import de.hanneseilers.jftdiserial.core.StopBits;
 
 /**
  * FTD2xx 64 bit connector

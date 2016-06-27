@@ -1,4 +1,4 @@
-package de.hanneseilers.jftdiserial.core;
+package de.hanneseilers.jserial.core;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,18 +6,18 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.hanneseilers.jftdiserial.core.connectors.JD2XXConnector;
-import de.hanneseilers.jftdiserial.core.connectors.RXTXConnector;
-import de.hanneseilers.jftdiserial.core.connectors.YAD2xxConnector;
-import de.hanneseilers.jftdiserial.core.interfaces.SerialDataRecievedListener;
-import de.hanneseilers.jftdiserial.core.interfaces.jFTDIserialConnector;
+import de.hanneseilers.jserial.core.connectors.JD2XXConnector;
+import de.hanneseilers.jserial.core.connectors.RXTXConnector;
+import de.hanneseilers.jserial.core.connectors.YAD2xxConnector;
+import de.hanneseilers.jserial.core.interfaces.SerialDataRecievedListener;
+import de.hanneseilers.jserial.core.interfaces.jFTDIserialConnector;
 
 /**
  * Main class
  * @author Hannes Eilers
  *
  */
-public class FTDISerial implements jFTDIserialConnector, SerialDataRecievedListener {
+public class JSerial implements jFTDIserialConnector, SerialDataRecievedListener {
 
 	public static boolean connectorLibsLoaded = false;
 	
@@ -31,7 +31,7 @@ public class FTDISerial implements jFTDIserialConnector, SerialDataRecievedListe
 	/**
 	 * Constructor
 	 */
-	public FTDISerial() {		
+	public JSerial() {		
 		registerConnectors();
 		connectorLibsLoaded = true;
 		selectFirstAvailableLib();
@@ -45,7 +45,7 @@ public class FTDISerial implements jFTDIserialConnector, SerialDataRecievedListe
 	 * @param parity	{@link Parity}
 	 * @param timeout	{@link Integer} timeout for sending and recieving data.
 	 */
-	public FTDISerial(Baudrates baudrate, DataBits dataBits, StopBits stopBits, Parity parity, int timeout){
+	public JSerial(Baudrates baudrate, DataBits dataBits, StopBits stopBits, Parity parity, int timeout){
 		this();
 		setConnectionSettings(baudrate, dataBits, stopBits, parity, timeout);
 	}
@@ -198,7 +198,7 @@ public class FTDISerial implements jFTDIserialConnector, SerialDataRecievedListe
 
 	@Override
 	public String getConnectorName() {
-		return "jFTDIserial";
+		return "jSerial";
 	}
 
 	@Override

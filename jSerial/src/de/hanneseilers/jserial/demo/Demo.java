@@ -1,4 +1,4 @@
-package de.hanneseilers.jftdiserial.demo;
+package de.hanneseilers.jserial.demo;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -8,13 +8,13 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.hanneseilers.jftdiserial.core.Baudrates;
-import de.hanneseilers.jftdiserial.core.DataBits;
-import de.hanneseilers.jftdiserial.core.FTDISerial;
-import de.hanneseilers.jftdiserial.core.Parity;
-import de.hanneseilers.jftdiserial.core.SerialDevice;
-import de.hanneseilers.jftdiserial.core.StopBits;
-import de.hanneseilers.jftdiserial.core.interfaces.SerialDataRecievedListener;
+import de.hanneseilers.jserial.core.Baudrates;
+import de.hanneseilers.jserial.core.DataBits;
+import de.hanneseilers.jserial.core.JSerial;
+import de.hanneseilers.jserial.core.Parity;
+import de.hanneseilers.jserial.core.SerialDevice;
+import de.hanneseilers.jserial.core.StopBits;
+import de.hanneseilers.jserial.core.interfaces.SerialDataRecievedListener;
 
 /**
  * Test class
@@ -30,7 +30,7 @@ public class Demo implements SerialDataRecievedListener {
 		System.out.println("Working Directory = " +
 	              System.getProperty("user.dir"));
 		
-		FTDISerial ftdi = new FTDISerial();
+		JSerial ftdi = new JSerial();
 		BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
 		
 		// showing available libraries

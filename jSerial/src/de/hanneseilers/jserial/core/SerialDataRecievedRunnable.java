@@ -1,6 +1,6 @@
-package de.hanneseilers.jftdiserial.core;
+package de.hanneseilers.jserial.core;
 
-import de.hanneseilers.jftdiserial.core.interfaces.SerialDataRecievedListener;
+import de.hanneseilers.jserial.core.interfaces.SerialDataRecievedListener;
 
 /**
  * Class for notifying {@link SerialDataRecievedListener}.

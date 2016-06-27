@@ -1,4 +1,4 @@
-package de.hanneseilers.jftdiserial.core.connectors;
+package de.hanneseilers.jserial.core.connectors;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -7,11 +7,11 @@ import java.util.TooManyListenersException;
 
 import org.apache.logging.log4j.LogManager;
 
-import de.hanneseilers.jftdiserial.core.Baudrates;
-import de.hanneseilers.jftdiserial.core.DataBits;
-import de.hanneseilers.jftdiserial.core.Parity;
-import de.hanneseilers.jftdiserial.core.SerialDevice;
-import de.hanneseilers.jftdiserial.core.StopBits;
+import de.hanneseilers.jserial.core.Baudrates;
+import de.hanneseilers.jserial.core.DataBits;
+import de.hanneseilers.jserial.core.Parity;
+import de.hanneseilers.jserial.core.SerialDevice;
+import de.hanneseilers.jserial.core.StopBits;
 import jd2xx.JD2XX;
 import jd2xx.JD2XXEvent;
 import jd2xx.JD2XXEventListener;

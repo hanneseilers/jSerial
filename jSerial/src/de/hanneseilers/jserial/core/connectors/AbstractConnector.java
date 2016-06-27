@@ -1,4 +1,4 @@
-package de.hanneseilers.jftdiserial.core.connectors;
+package de.hanneseilers.jserial.core.connectors;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -11,10 +11,10 @@ import java.util.StringTokenizer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.hanneseilers.jftdiserial.core.FTDISerial;
-import de.hanneseilers.jftdiserial.core.SerialDataRecievedRunnable;
-import de.hanneseilers.jftdiserial.core.interfaces.SerialDataRecievedListener;
-import de.hanneseilers.jftdiserial.core.interfaces.jFTDIserialConnector;
+import de.hanneseilers.jserial.core.JSerial;
+import de.hanneseilers.jserial.core.SerialDataRecievedRunnable;
+import de.hanneseilers.jserial.core.interfaces.SerialDataRecievedListener;
+import de.hanneseilers.jserial.core.interfaces.jFTDIserialConnector;
 
 public abstract class AbstractConnector implements jFTDIserialConnector {
 
@@ -69,7 +69,7 @@ public abstract class AbstractConnector implements jFTDIserialConnector {
 	 * @return 				{@code true\ if successfull, {@code false} otherwise.
 	 */
 	protected boolean loadRequiredLibs(String libFileName, boolean loadLib){
-		if( FTDISerial.connectorLibsLoaded ){
+		if( JSerial.connectorLibsLoaded ){
 			return true;
 		}
 		

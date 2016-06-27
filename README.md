@@ -1,8 +1,8 @@
-jFTDIserial
+jSserial
 ===========
 
-Java library for connecting ftdi serial usb converter.
-jFTDIserial uses different open source libraries from that you can choose and was primarily build to connect to ftdi to serial converter chips. but it also works with regular serial hardware ports.
+jSerial is a library for connecting serial usb converter to your Java application.
+jSerial uses different open source libraries from that you can choose and was primarily build to connect to ftdi to serial converter chips. but it also works with regular serial hardware ports.
 
 Used libraries
 --------------
@@ -18,5 +18,5 @@ If jFTDIserial didn't work because of not found library dlls (.so on linux), ins
 
 Licence
 -------
-You can use jFTDIserial for private use as you want. You're also free to modify jFTDIserial depending on your own needs.
-Take care of the licences of the used libraries (see above) and also refer to LICENCE file for details about the jFTDIserial licence.
+You can use jSerial for private use as you want. You're also free to modify jSerial depending on your own needs.
+Take care of the licences of the used libraries (see above) and also refer to LICENCE file for details about the jSerial licence.

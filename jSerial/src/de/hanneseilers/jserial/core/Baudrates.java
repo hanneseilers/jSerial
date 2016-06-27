@@ -1,4 +1,4 @@
-package de.hanneseilers.jftdiserial.core;
+package de.hanneseilers.jserial.core;
 
 public enum Baudrates {
 

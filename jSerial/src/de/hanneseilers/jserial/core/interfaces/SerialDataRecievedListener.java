@@ -1,4 +1,4 @@
-package de.hanneseilers.jftdiserial.core.interfaces;
+package de.hanneseilers.jserial.core.interfaces;
 
 /**
  * Interface for data recieved listener
