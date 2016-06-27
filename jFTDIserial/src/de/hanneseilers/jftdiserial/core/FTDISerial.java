@@ -69,6 +69,7 @@ public class FTDISerial implements jFTDIserialConnector, SerialDataRecievedListe
 		for( jFTDIserialConnector con : connectors ){
 			if( con.isLibLoaded() ){
 				selectLibByName( con.getConnectorName() );
+				return;
 			}
 		}
 	}
