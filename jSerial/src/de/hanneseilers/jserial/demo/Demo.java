@@ -35,6 +35,7 @@ public class Demo implements SerialDataRecievedListener {
 		
 		// showing available libraries
 		List<String> libs = ftdi.getAvailableLibNames();
+		log.info( "Available libs = {}", libs.size() );
 		for( int i=0; i<libs.size(); i++ ){
 			String lib = libs.get(i);
 			log.debug("LIB {}: {}", i, lib);

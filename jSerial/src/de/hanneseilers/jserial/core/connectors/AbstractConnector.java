@@ -78,6 +78,8 @@ public abstract class AbstractConnector implements jFTDIserialConnector {
 		File libSource = getLibSource(libFileName);
 		
 		if( libSource != null ){
+			
+			boolean vCanWrite = false;
 			while( libPathParser.hasMoreElements() ){
 				
 				// get path for library
@@ -85,11 +87,12 @@ public abstract class AbstractConnector implements jFTDIserialConnector {
 				File libDestination = new File(libPath + "/" + libSource.getName());
 				
 				// check if can write in path
-				if( libSource.canRead() && libDestination.canWrite() ){
+				if( libSource.canRead() && libDestination.getParentFile().canWrite() ){
 					
 					try{
 						// copy lib
 						copyFile( libSource, libDestination, true );
+						vCanWrite = true;
 						log.info("Copied lib to {}", libDestination.getAbsolutePath());
 						if( loadLib ){
 							System.load( libDestination.getAbsolutePath() );
@@ -104,10 +107,16 @@ public abstract class AbstractConnector implements jFTDIserialConnector {
 					
 				}
 				
-			}	
+			}
+			
+			if( !vCanWrite ){
+				log.error( "Cannot copy library files, no permission!" );
+			}
+			
 		} else{
 			log.warn("{} library doesn't support your operating system!", libFileName);
 		}
+		
 		
 		return false;
 	}

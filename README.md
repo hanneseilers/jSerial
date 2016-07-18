@@ -1,4 +1,4 @@
-jSserial
+jSerial
 ===========
 
 jSerial is a library for connecting serial usb converter to your Java application.
@@ -12,7 +12,9 @@ Used libraries
 
 Installation
 ------------
-Normally no installation (except of Java runtime) is needed.
+Build jSerial.jar using ant build script or use the ones from release and include it into your project.
+Copy lib dependencies from source or from release achrive file into your peoject and include external lib jar files.
+
 On Ubuntu x64 systems you also needed to install librxtx-java from ubuntu repository.
 If jFTDIserial didn't work because of not found library dlls (.so on linux), install the corresponding library inside your Java runtime installation path.
 
