@@ -1,5 +1,8 @@
-*.class
-
-# Package Files #
-*.war
-*.ear
+.gradle/*
+*.log
+/bin/*
+/build/*
+.bin
+.classpath
+.lock
+.class
