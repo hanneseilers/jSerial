@@ -6,17 +6,22 @@ jSerial uses different open source libraries from that you can choose and was pr
 
 Used libraries
 --------------
+* jSerialComm (from: Fazecast, Licence: LGPL V3, Apache v2)
 * jd2xx (Licence: LGPL v2, BSD)
 * yad2xx (Licence: LGPL v3)
-* rxtx (Licence: LGPL v2.1 )
+
+* rxtx (Licence: LGPL v2.1 ) !deprecated, not used anymore!
 
 Installation
 ------------
-Build jSerial.jar using ant build script or use the ones from release and include it into your project.
-Copy lib dependencies from source or from release achrive file into your peoject and include external lib jar files.
+Simply use the .jar file. Normally jSerialComm should work on all operating systems without anything to do.
 
-On Ubuntu x64 systems you also needed to install librxtx-java from ubuntu repository.
-If jFTDIserial didn't work because of not found library dlls (.so on linux), install the corresponding library inside your Java runtime installation path.
+Except for Linux users, execute inside your terminal:
+
+    sudo usermod -a -G uucp username
+    sudo usermod -a -G dialout username
+    sudo usermod -a -G lock username
+    sudo usermod -a -G tty username
 
 Licence
 -------
