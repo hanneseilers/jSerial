@@ -35,7 +35,7 @@ public class YAD2xxConnector extends AbstractConnector {
 	 * Constructor
 	 */
 	public YAD2xxConnector() {
-		log = LogManager.getLogger();
+		log = LogManager.getLogger(YAD2xxConnector.class);
 		connectorName = "yad2xx (64bit)";
 		connectorLibDir = "yad2xx";
 		

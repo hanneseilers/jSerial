@@ -22,7 +22,7 @@ public class JSerial implements jFTDIserialConnector, SerialDataRecievedListener
 
 	public static boolean connectorLibsLoaded = false;
 	
-	private static final Logger log = LogManager.getLogger();
+	private static final Logger log = LogManager.getLogger(JSerial.class);
 	private List<jFTDIserialConnector> connectors = new ArrayList<jFTDIserialConnector>();
 	private jFTDIserialConnector connector = null;	
 	private boolean connected = false;

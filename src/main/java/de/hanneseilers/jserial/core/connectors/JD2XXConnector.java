@@ -33,7 +33,7 @@ public class JD2XXConnector extends AbstractConnector implements JD2XXEventListe
 	private int timeout = 500;
 
 	public JD2XXConnector() {
-		log = LogManager.getLogger();
+		log = LogManager.getLogger(JD2XXConnector.class);
 		connectorName = "jd2xx (32bit)";
 		connectorLibDir = "jd2xx";
 		
