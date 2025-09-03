@@ -2,4 +2,6 @@
 *.log
 /bin/
 /build/
-
+.bin
+.classpath
+.lock
