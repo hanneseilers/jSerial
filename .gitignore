@@ -1,7 +1,8 @@
-.gradle
+.gradle/*
 *.log
-/bin/
-/build/
+/bin/*
+/build/*
 .bin
 .classpath
 .lock
+.class
