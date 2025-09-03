@@ -17,6 +17,7 @@ dependencies {
 }
 
 jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     from {
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
@@ -37,6 +38,7 @@ tasks.register('buildLib', Jar) {
 // task zipping lib-sources
 tasks.register('zipLibSources', Zip) {
     description = 'Packs lib-sources directory into a versioned zip at project root'
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     from('lib-sources') { into('lib-sources') }
     archiveBaseName.set('lib-sources')
     archiveVersion.set(project.version.toString())
