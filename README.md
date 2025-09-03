@@ -23,6 +23,10 @@ Except for Linux users, execute inside your terminal:
     sudo usermod -a -G lock username
     sudo usermod -a -G tty username
 
+Troubleshooting
+---------------
+If jSerialComm is not working, copy the lib-sources directory into your project root directory. So other libraries can be loaded.
+
 Licence
 -------
 You can use jSerial for private use as you want. You're also free to modify jSerial depending on your own needs.
