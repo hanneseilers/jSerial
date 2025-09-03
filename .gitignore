@@ -1,8 +1,5 @@
-/FTDIInterface.dll
-/rxtxSerial.dll
-/jftdiserial.jar
-/librxtxSerial.so
-
+.gradle
 *.log
 /bin/
 /build/
+
