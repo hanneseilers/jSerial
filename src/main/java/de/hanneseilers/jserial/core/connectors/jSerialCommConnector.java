@@ -23,7 +23,7 @@ public class jSerialCommConnector extends AbstractConnector implements SerialPor
 	private int timeout = 500;
 
 	public jSerialCommConnector() {
-		log = LogManager.getLogger();
+		log = LogManager.getLogger(jSerialCommConnector.class);
 		connectorName = "jSerialComm (fazecast)";
 		connectorLibDir = "jserialcomm";
         log.info("Loaded {}", getConnectorName());

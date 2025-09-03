@@ -10,13 +10,14 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.apache.logging.log4j:log4j-core:2.25.1'
+    api 'org.apache.logging.log4j:log4j-core:2.25.1'
     implementation 'org.apache.logging.log4j:log4j-api:2.25.1'
 
     implementation fileTree("libs") { include "*.jar" }
 }
 
 jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     from {
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
@@ -37,6 +38,7 @@ tasks.register('buildLib', Jar) {
 // task zipping lib-sources
 tasks.register('zipLibSources', Zip) {
     description = 'Packs lib-sources directory into a versioned zip at project root'
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     from('lib-sources') { into('lib-sources') }
     archiveBaseName.set('lib-sources')
     archiveVersion.set(project.version.toString())

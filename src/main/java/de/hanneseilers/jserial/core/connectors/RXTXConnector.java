@@ -35,7 +35,7 @@ public class RXTXConnector extends AbstractConnector implements SerialPortEventL
 	private int timeout = 500;
 	
 	public RXTXConnector() {
-		log = LogManager.getLogger();
+		log = LogManager.getLogger(RXTXConnector.class);
 		connectorName = "rxtx serial";
 		connectorLibDir = "rxtx";
 		

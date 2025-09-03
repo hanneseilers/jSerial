@@ -23,7 +23,7 @@ import de.hanneseilers.jserial.core.interfaces.SerialDataRecievedListener;
  */
 public class Demo implements SerialDataRecievedListener {
 
-	private static final Logger log = LogManager.getLogger();
+	private static final Logger log = LogManager.getLogger(Demo.class);
 	
 	public void test(){
 		log.debug("Createing FTDIserial");
