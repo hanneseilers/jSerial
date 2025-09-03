@@ -21,7 +21,7 @@ public abstract class AbstractConnector implements jFTDIserialConnector {
 	protected String connectorName = "connector";
 	protected String connectorLibDir = "connector";
 	protected boolean libLoaded = false;
-	protected Logger log = LogManager.getLogger();
+	protected Logger log = LogManager.getLogger(AbstractConnector.class);
 	protected List<SerialDataRecievedListener> serialDataRecievedListeners = new ArrayList<SerialDataRecievedListener>();
 	
 	@Override
@@ -63,17 +63,17 @@ public abstract class AbstractConnector implements jFTDIserialConnector {
 	
 	
 	/**
-	 * Copies required library files to a valid destination directory and loads library.
-	 * @param libFileName	{@link String} connectorName of library file wihtout prefix 'lib' or ending.
-	 * @param loadLib		If {@code true} library is loaded into JVM.
-	 * @return 				{@code true\ if successfull, {@code false} otherwise.
-	 */
-	protected boolean loadRequiredLibs(String libFileName, boolean loadLib){
+     * Copies required library files to a valid destination directory and loads library.
+     *
+     * @param libFileName {@link String} connectorName of library file wihtout prefix 'lib' or ending.
+     * @return {@code true\ if successfull, {@code false} otherwise.
+     */
+	protected boolean loadRequiredLibs(String libFileName){
 		if( JSerial.connectorLibsLoaded ){
 			return true;
 		}
 		
-		String libPath = "./:"  + System.getProperty("java.library.path");
+		String libPath = "./lib-sources:"  + System.getProperty("java.library.path");
 		StringTokenizer libPathParser = new StringTokenizer(libPath, ":");
 		File libSource = getLibSource(libFileName);
 		
@@ -84,25 +84,26 @@ public abstract class AbstractConnector implements jFTDIserialConnector {
 				
 				// get path for library
 				libPath = libPathParser.nextToken();
-				File libDestination = new File(libPath + "/" + libSource.getName());
+				//File libDestination = new File(libPath + "/" + libSource.getName());
 				
 				// check if can write in path
-				if( libSource.canRead() && libDestination.getParentFile().canWrite() ){
-					
+				//if( libSource.canRead() && libDestination.getParentFile().canWrite() ){
+				if( libSource.canRead() ){
+
 					try{
 						// copy lib
-						copyFile( libSource, libDestination, true );
+						//copyFile( libSource, libDestination, true );
 						vCanWrite = true;
-						log.info("Copied lib to {}", libDestination.getAbsolutePath());
-						if( loadLib ){
-							System.load( libDestination.getAbsolutePath() );
-							log.debug("Loaded library " + libDestination.getAbsolutePath().replace("./", ""));
-						} else throw new IOException();						
+						//log.info("Copied lib to {}", libDestination.getAbsolutePath());
+
+                        System.load( libSource.getAbsolutePath() );
+
+                        //log.debug("Loaded library " + libDestination.getAbsolutePath().replace("./", ""));
+                        log.debug("Loaded library " + libSource.getAbsolutePath().replace("./", ""));
 						return true;
-					}catch (IOException e){
-						log.debug("Can not copy library to {}", libDestination.getPath());
 					}catch (UnsatisfiedLinkError e){
-						log.warn("Could not load library {}", libDestination.getPath() + "!");
+						//log.warn("Could not load library {}", libDestination.getPath() + "!");
+						log.warn("Could not load library {}", libSource.getPath() + "!");
 					}
 					
 				}
@@ -174,7 +175,7 @@ public abstract class AbstractConnector implements jFTDIserialConnector {
 		if( os != null && bit != null ){
 		
 			// get file
-			File libFile = new File("lib/" + connectorLibDir + "/"
+			File libFile = new File("lib-sources/" + connectorLibDir + "/"
 					+ os + "/" + bit + "/" + prefix + libFileName + ending);
 			log.debug("OS: {}",os);
 			log.debug("BIT: {}", bit);

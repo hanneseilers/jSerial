@@ -38,7 +38,7 @@ public class JD2XXConnector extends AbstractConnector implements JD2XXEventListe
 		connectorLibDir = "jd2xx";
 		
 		try{
-			libLoaded = loadRequiredLibs("JD2XX", true);
+			libLoaded = loadRequiredLibs("JD2XX");
 			if( libLoaded ){
 				device = new JD2XX();
 				log.info("Loaded {}", getConnectorName());

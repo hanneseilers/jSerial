@@ -41,7 +41,7 @@ public class YAD2xxConnector extends AbstractConnector {
 		
 		try{			
 			// load library
-			libLoaded = loadRequiredLibs("FTDIInterface", true);			
+			libLoaded = loadRequiredLibs("FTDIInterface");
 			if( libLoaded ){
 				ftdiInterface = new FTDIInterface();
 				log.info("Loaded {}", getConnectorName());
