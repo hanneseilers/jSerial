@@ -4,7 +4,6 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/MR-Botcontrol.main.iml" filepath="$PROJECT_DIR$/.idea/modules/MR-Botcontrol.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/MR-Botcontrol.test.iml" filepath="$PROJECT_DIR$/.idea/modules/MR-Botcontrol.test.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jSerial.main.iml" filepath="$PROJECT_DIR$/.idea/modules/jSerial.main.iml" />
     </modules>
   </component>
 </project>
