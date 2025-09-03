@@ -5,7 +5,7 @@ import net.sf.yad2xx.Device;
 
 public class SerialDevice {
 
-	private String jd2xxDevice = null;
+	private String deviceName = null;
 	private Device yad2xxDevice = null;
 	private CommPortIdentifier rxtxDevice = null;
 	
@@ -22,7 +22,7 @@ public class SerialDevice {
 	 * @param device	{@link String} of device description
 	 */
 	public SerialDevice(String device){
-		jd2xxDevice = device;
+		deviceName = device;
 	}
 	
 	/**
@@ -43,8 +43,8 @@ public class SerialDevice {
 	/**
 	 * @return the jd2xxDevice
 	 */
-	public String getJd2xxDevice() {
-		return jd2xxDevice;
+	public String getDeviceName() {
+		return deviceName;
 	}
 	
 	public String toString(){
@@ -52,8 +52,8 @@ public class SerialDevice {
 			return yad2xxDevice.getDescription()
 					+ "(" + yad2xxDevice.getSerialNumber() + ")";
 		}
-		else if( jd2xxDevice != null ){
-			return jd2xxDevice;
+		else if( deviceName != null ){
+			return deviceName;
 		}
 		else if( rxtxDevice != null ){
 			return rxtxDevice.getName();

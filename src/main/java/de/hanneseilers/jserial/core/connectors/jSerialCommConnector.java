@@ -1,24 +1,22 @@
 package de.hanneseilers.jserial.core.connectors;
 
 import de.hanneseilers.jserial.core.*;
-import gnu.io.*;
+import com.fazecast.jSerialComm.*;
 import org.apache.logging.log4j.LogManager;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 
-public class jSerialCommConnector extends AbstractConnector implements SerialPortEventListener {
+public class jSerialCommConnector extends AbstractConnector implements SerialPortDataListener {
 
 	private SerialPort device;
 	private InputStream input;
 	private OutputStream output;
-	private boolean libLoaded = false;
 
-	private Baudrates baudrate = Baudrates.BAUD_9600;
+    private Baudrates baudrate = Baudrates.BAUD_9600;
 	private DataBits dataBits;
 	private StopBits stopBits;
 	private Parity parity;
@@ -28,26 +26,18 @@ public class jSerialCommConnector extends AbstractConnector implements SerialPor
 		log = LogManager.getLogger();
 		connectorName = "jSerialComm (fazecast)";
 		connectorLibDir = "jserialcomm";
-		
-		System.getProperty("java.library.path");
-		libLoaded = loadRequiredLibs("");
-		if( libLoaded ){
-			log.info("Loaded " + getConnectorName());
-		}
+        log.info("Loaded {}", getConnectorName());
 	}
 
 	@Override
 	synchronized  public List<SerialDevice> getAvailableDevices() {
-		List<SerialDevice> devices = new ArrayList<SerialDevice>();
-		
-		@SuppressWarnings("unchecked")
-		Enumeration<CommPortIdentifier> ports = CommPortIdentifier.getPortIdentifiers();
-		while( ports.hasMoreElements() ){
-			CommPortIdentifier port = ports.nextElement();
-			if( port.getPortType() == CommPortIdentifier.PORT_SERIAL ){
-				devices.add( new SerialDevice(port) );
-			}
-		}
+		List<SerialDevice> devices = new ArrayList<>();
+
+        for (SerialPort port : List.of(SerialPort.getCommPorts())) {
+            if (port != null) {
+                devices.add(new SerialDevice(port.getSystemPortName() + ": " + port.getDescriptivePortName()));
+            }
+        }
 		
 		return devices;
 	}
@@ -55,21 +45,19 @@ public class jSerialCommConnector extends AbstractConnector implements SerialPor
 	@Override
 	public boolean connect(SerialDevice sDevice) {
 		try{
-			
-			CommPort com = sDevice.getRxTxDevice().open(this.getConnectorName(), timeout);
-			device = (SerialPort) com;				
-			device.setSerialPortParams(baudrate.baud, dataBits.bits_rxtx, stopBits.bits_rxtx, parity.parity_rxtx);
-			device.addEventListener(this);
-			device.notifyOnDataAvailable(true);
-			
+
+            String deviceName = sDevice.getDeviceName().split(":")[0];
+			device = SerialPort.getCommPort(deviceName);
+            device.setComPortParameters(baudrate.baud, dataBits.bits_rxtx, stopBits.bits_rxtx, parity.parity_rxtx);
+            device.addDataListener(this);
+            device.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, timeout, timeout);
+
 			input = device.getInputStream();
 			output = device.getOutputStream();
 			return true;
-			
-		}catch (PortInUseException e){
-			log.error("Serial port {} is in use.", sDevice.getRxTxDevice().getName());
+
 		}catch (Exception e){
-			log.error("Can not open port {}", sDevice.getRxTxDevice().getName());
+			log.error("Can not open port {}", sDevice.getDeviceName());
 		}
 		return false;
 	}
@@ -78,7 +66,7 @@ public class jSerialCommConnector extends AbstractConnector implements SerialPor
 	public boolean disconnect() {
 		if( device != null ){
 			try{
-				device.close();
+				device.closePort();
 				input.close();
 				output.close();
 				
@@ -106,7 +94,7 @@ public class jSerialCommConnector extends AbstractConnector implements SerialPor
 
 	@Override
 	public boolean isLibLoaded() {
-		return libLoaded;
+        return true;
 	}
 
 	@Override
@@ -120,26 +108,20 @@ public class jSerialCommConnector extends AbstractConnector implements SerialPor
 			try{
 				output.write(buffer);
 			}catch (IOException e){
-				log.error("Could not write data to serial port {}", device.getName());
+				log.error("Could not write data to serial port {}", device.getSystemPortName());
 			}
 		}
 		
 		return false;
 	}
 
-	@Override
-	public void serialEvent(SerialPortEvent event) {
-		if( event.getEventType() == SerialPortEvent.DATA_AVAILABLE ){
-			
-			try {
-				byte[] buffer = new byte[1];
-				input.read( buffer );
-				notifySerialDataRecievedListener( buffer[0] );
-			} catch (IOException e) {
-				log.error("Error recieving data byte from {}", device.getName());
-			}
-			
-		}
-	}
+    @Override
+    public int getListeningEvents() {
+        return SerialPort.LISTENING_EVENT_DATA_AVAILABLE | SerialPort.LISTENING_EVENT_DATA_WRITTEN | SerialPort.LISTENING_EVENT_PORT_DISCONNECTED;
+    }
 
+    @Override
+	public void serialEvent(SerialPortEvent event) {
+        log.debug("Received serial port event {}", event);
+    }
 }

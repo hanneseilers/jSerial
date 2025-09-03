@@ -91,9 +91,9 @@ public class Demo implements SerialDataRecievedListener {
 			log.debug("write {} to device", (char) 0x3f);
 			
 			try {
-				Thread.sleep(10000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+				Thread.sleep(2000);
+			} catch (InterruptedException ignored) {
+
 			}
 			
 		}

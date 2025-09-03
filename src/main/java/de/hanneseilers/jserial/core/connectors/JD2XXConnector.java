@@ -69,7 +69,7 @@ public class JD2XXConnector extends AbstractConnector implements JD2XXEventListe
 		try{
 			
 			if( libLoaded ){
-				device.openByDescription(sDevice.getJd2xxDevice());
+				device.openByDescription(sDevice.getDeviceName());
 				device.setTimeouts(timeout, timeout);
 				device.setBaudRate(baudrate.baud);
 				device.setDataCharacteristics(dataBits.bits, stopBits.bits_jd2xx, parity.parity_jd2xx);
