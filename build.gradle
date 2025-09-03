@@ -1,0 +1,14 @@
+plugins {
+    id 'java'
+}
+
+group = 'de.hanneseilers.jserial'
+version = '0.0.5'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation fileTree("libs") { include "*.jar" }
+}

@@ -1,5 +1,7 @@
-*.class
+/FTDIInterface.dll
+/rxtxSerial.dll
+/jftdiserial.jar
+/librxtxSerial.so
 
-# Package Files #
-*.war
-*.ear
+*.log
+/bin/
