@@ -73,7 +73,7 @@ public abstract class AbstractConnector implements jFTDIserialConnector {
 			return true;
 		}
 		
-		String libPath = "./lib-sources:"  + System.getProperty("java.library.path");
+		String libPath = "./lib-sources"; //:"  + System.getProperty("java.library.path");
 		StringTokenizer libPathParser = new StringTokenizer(libPath, ":");
 		File libSource = getLibSource(libFileName);
 		

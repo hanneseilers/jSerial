@@ -3,6 +3,7 @@ package de.hanneseilers.jserial.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.hanneseilers.jserial.core.connectors.jSerialCommConnector;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -57,7 +58,8 @@ public class JSerial implements jFTDIserialConnector, SerialDataRecievedListener
 	private List<jFTDIserialConnector> registerConnectors(){
 		connectors.add( new JD2XXConnector() );
 		connectors.add( new YAD2xxConnector() );
-		connectors.add( new RXTXConnector() );
+		// connectors.add( new RXTXConnector() ); // deprecated
+        connectors.add( new jSerialCommConnector() );
 		
 		return connectors;
 	}
